@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "711791537556",
+    "project_id": "meetapp-cdff6",
+    "storage_bucket": "meetapp-cdff6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711791537556:android:584184115d2152b403f381",
+        "android_client_info": {
+          "package_name": "com.cc221005.meetapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAjK2Q0x0zy8Tr3KcFH46Wxy9X2H0ekDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

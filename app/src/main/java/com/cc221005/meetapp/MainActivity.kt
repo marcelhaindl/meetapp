@@ -13,12 +13,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.cc221005.meetapp.ui.theme.MeetappTheme
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.views.Navigation
+import com.cc221005.meetapp.ui.views.OnboardingFlow1
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 
 class MainActivity : ComponentActivity() {
+    val db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
+
     private val navigationModel = NavigationModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = Firebase.auth
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly
+        val currentUser = auth.currentUser
         setContent {
             window.statusBarColor = getColor(R.color.black)
             window.navigationBarColor = getColor(R.color.black)
@@ -28,7 +43,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(navigationModel = navigationModel)
+                    if(currentUser != null) {
+                        Navigation(navigationModel = navigationModel)
+                    } else {
+                        // OnboardingFlow1()
+                        Navigation(navigationModel = navigationModel)
+                    }
                 }
             }
         }
