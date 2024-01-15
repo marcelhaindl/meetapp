@@ -1,3 +1,0 @@
-ui/views/screens
-
-All screens (combination of widgets)
