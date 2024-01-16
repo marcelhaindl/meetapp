@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.cc221005.meetapp.ui.theme.MeetappTheme
+import com.cc221005.meetapp.ui.uistates.LoginModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.views.Navigation
 import com.cc221005.meetapp.ui.views.OnboardingFlow1
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
 
     private val navigationModel = NavigationModel()
+    private val loginModel = LoginModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +45,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if(currentUser != null) {
-                        Navigation(navigationModel = navigationModel)
-                    } else {
-                        // OnboardingFlow1()
-                        Navigation(navigationModel = navigationModel)
-                    }
+                    loginModel.userIsLoggedIn(currentUser != null)
+                    Navigation(navigationModel = navigationModel, loginModel = loginModel)
                 }
             }
         }

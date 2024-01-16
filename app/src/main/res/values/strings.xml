@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">meetapp</string>
+    <string name="welcome_to_meetapp">Welcome to MeetApp</string>
+    <string name="where_moments_become_memories">Where moments become memories!</string>
+    <string name="onboarding_flow_1_text">Unlock the magic of meaningful connections at every event with MeetApp! Where seamless experiences and lasting memories come together effortlessly. Join us and make your gatherings extraordinary.</string>
+    <string name="all_you_need">All you need</string>
+    <string name="navigate_your_social_world_your_way">Navigate Your Social World, Your Way</string>
+    <string name="onboarding_flow_2_text">Create and join events, meet new friends, and stay informed with personalized recommendations based on your location and interests. Elevate your social experience with MeetApp – where connections and events converge effortlessly!</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="onboarding_flow_3_subtext">Welcome aboard! Simply input your chosen username and name to get started.</string>
+    <string name="let_s_get_started">Let\'s get started</string>
 </resources>

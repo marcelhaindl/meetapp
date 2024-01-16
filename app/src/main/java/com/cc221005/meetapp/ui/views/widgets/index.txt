@@ -1,3 +1,0 @@
-ui/views/widgets
-
-All widgets (standalone components used more often throughout the app)
