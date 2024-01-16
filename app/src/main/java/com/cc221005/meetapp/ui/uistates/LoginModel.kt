@@ -3,6 +3,7 @@ package com.cc221005.meetapp.ui.uistates
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cc221005.meetapp.ui.views.Screen
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,12 @@ class LoginModel : ViewModel() {
         viewModelScope.launch {
             _loginState.update { it.copy(email = email) }
             _loginState.update { it.copy(password = password) }
+        }
+    }
+
+    fun updateFirebaseUser(user: FirebaseUser?) {
+        viewModelScope.launch {
+            _loginState.update { it.copy(currentUser = user) }
         }
     }
 

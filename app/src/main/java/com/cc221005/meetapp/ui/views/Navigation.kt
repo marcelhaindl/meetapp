@@ -1,5 +1,8 @@
 package com.cc221005.meetapp.ui.views
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -65,12 +69,15 @@ import com.cc221005.meetapp.ui.views.screens.Home
 import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
 import com.cc221005.meetapp.ui.views.widgets.OnboardingButtons
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 
 
-fun getTrailingButtonFunction(navController: NavController, currentScreen: Screen, loginModel: LoginModel): () -> Unit {
+fun getTrailingButtonFunction(navController: NavController, currentScreen: Screen, loginModel: LoginModel, auth: FirebaseAuth, context: Context, db: FirebaseFirestore): () -> Unit {
     when(currentScreen) {
         Screen.OnboardingFlow1 -> return {
             navController.navigate(Screen.OnboardingFlow2.route)
@@ -81,13 +88,52 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
         }
 
         Screen.OnboardingFlow3 -> return {
-            // TODO: Save Email and Password
-            navController.navigate(Screen.OnboardingFlow4.route)
+            auth.createUserWithEmailAndPassword(loginModel.loginState.value.email, loginModel.loginState.value.password)
+                .addOnCompleteListener { task ->
+                    if(task.isSuccessful) {
+                        loginModel.updateFirebaseUser(auth.currentUser)
+                        navController.navigate(Screen.OnboardingFlow4.route)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.authentication_failed),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+        }
+
+        Screen.OnboardingFlow3Login -> return {
+            auth.signInWithEmailAndPassword(loginModel.loginState.value.email, loginModel.loginState.value.password)
+                .addOnCompleteListener { task ->
+                    if(task.isSuccessful) {
+                        loginModel.updateFirebaseUser(auth.currentUser)
+                        loginModel.userIsLoggedIn(true)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.authentication_failed),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
         }
 
         Screen.OnboardingFlow4 -> return {
-            // TODO: Save Username and Name
-            navController.navigate(Screen.OnboardingFlow5.route)
+            val data = hashMapOf(
+                "username" to loginModel.loginState.value.username,
+                "name" to loginModel.loginState.value.name
+            )
+            db.collection("users").document(auth.currentUser!!.uid)
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener { navController.navigate(Screen.OnboardingFlow5.route) }
+                .addOnFailureListener {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.failed_adding_data),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
         }
 
         Screen.OnboardingFlow5 -> return {
@@ -110,7 +156,7 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation(navigationModel: NavigationModel, loginModel: LoginModel) {
+fun Navigation(navigationModel: NavigationModel, loginModel: LoginModel, auth: FirebaseAuth, db: FirebaseFirestore) {
     val navState = navigationModel.navigationState.collectAsState()
     val loginState = loginModel.loginState.collectAsState()
     val selectedScreen = navState.value.selectedScreen
@@ -140,13 +186,22 @@ fun Navigation(navigationModel: NavigationModel, loginModel: LoginModel) {
                     navController = navController,
                     selectedScreen = selectedScreen
                 ) else OnboardingButtons(
-                    showLeadingButton = selectedScreen != Screen.OnboardingFlow1,
+                    showLeadingButton = selectedScreen != Screen.OnboardingFlow1 && selectedScreen != Screen.OnboardingFlow4,
                     navController = navController,
                     onTrailingButtonClicked = getTrailingButtonFunction(
                         navController = navController,
-                        currentScreen = navState.value.selectedScreen,
-                        loginModel = loginModel
-                    )
+                        currentScreen = selectedScreen,
+                        loginModel = loginModel,
+                        auth = auth,
+                        context = LocalContext.current,
+                        db = db
+                    ),
+                    trailingButtonText = when (selectedScreen) {
+                        Screen.OnboardingFlow3 -> "Sign up"
+                        Screen.OnboardingFlow3Login -> "Login"
+                        Screen.OnboardingFlow6 -> "Finish"
+                        else -> "Next"
+                    }
                 )
             }
     ) {
@@ -166,11 +221,15 @@ fun Navigation(navigationModel: NavigationModel, loginModel: LoginModel) {
                     }
                     composable(Screen.OnboardingFlow3.route) {
                         navigationModel.selectScreen(Screen.OnboardingFlow3)
-                        OnboardingFlow3()
+                        OnboardingFlow3(navController = navController, loginModel = loginModel)
+                    }
+                    composable(Screen.OnboardingFlow3Login.route) {
+                        navigationModel.selectScreen(Screen.OnboardingFlow3Login)
+                        OnboardingFlow3Login(navController = navController)
                     }
                     composable(Screen.OnboardingFlow4.route) {
                         navigationModel.selectScreen(Screen.OnboardingFlow4)
-                        OnboardingFlow4()
+                        OnboardingFlow4(loginModel = loginModel)
                     }
                     composable(Screen.OnboardingFlow5.route) {
                         navigationModel.selectScreen(Screen.OnboardingFlow5)

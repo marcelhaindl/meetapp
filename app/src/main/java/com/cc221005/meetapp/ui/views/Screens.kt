@@ -9,6 +9,7 @@ sealed class Screen(val route: String){
     object OnboardingFlow1: Screen("onboardingflow1")
     object OnboardingFlow2: Screen("onboardingflow2")
     object OnboardingFlow3: Screen("onboardingflow3")
+    object OnboardingFlow3Login: Screen("onboardingflow3login")
     object OnboardingFlow4: Screen("onboardingflow4")
     object OnboardingFlow5: Screen("onboardingflow5")
     object OnboardingFlow6: Screen("onboardingflow6")

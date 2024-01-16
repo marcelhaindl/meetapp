@@ -35,11 +35,11 @@ fun OnboardingButtons(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if(showLeadingButton) TextButton(onClick = { navController.popBackStack() }) {
+        TextButton(onClick = { navController.popBackStack() }, enabled = showLeadingButton) {
             Text(text = leadingButtonText)
-        } else Box(modifier = Modifier.width(1.dp))
-        if(showTrailingButton) TextButton(onClick = onTrailingButtonClicked ) {
+        }
+        TextButton(onClick = onTrailingButtonClicked, enabled = showTrailingButton) {
             Text(text = trailingButtonText)
-        } else Box(modifier = Modifier.width(1.dp))
+        }
     }
 }

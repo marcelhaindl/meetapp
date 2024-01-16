@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly
-        val currentUser = auth.currentUser
+        loginModel.updateFirebaseUser(auth.currentUser)
         setContent {
             window.statusBarColor = getColor(R.color.black)
             window.navigationBarColor = getColor(R.color.black)
@@ -45,8 +45,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    loginModel.userIsLoggedIn(currentUser != null)
-                    Navigation(navigationModel = navigationModel, loginModel = loginModel)
+                    Navigation(navigationModel = navigationModel, loginModel = loginModel, auth = auth, db = db)
                 }
             }
         }
