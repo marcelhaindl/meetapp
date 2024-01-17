@@ -7,6 +7,6 @@ data class UserState(
     val password: String = "",
     val username: String = "",
     val name: String = "",
-    val currentUser: FirebaseUser? = null,
+    val localUser: FirebaseUser? = null,
     val interests: MutableList<String> = mutableListOf()
 )

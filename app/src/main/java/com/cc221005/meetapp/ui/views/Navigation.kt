@@ -1,14 +1,10 @@
 package com.cc221005.meetapp.ui.views
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
-import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -21,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -30,13 +25,13 @@ import androidx.navigation.compose.rememberNavController
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
+import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.views.screens.Chat
 import com.cc221005.meetapp.ui.views.screens.Create
 import com.cc221005.meetapp.ui.views.screens.Home
 import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
 import com.cc221005.meetapp.ui.views.screens.Settings
-import com.cc221005.meetapp.ui.views.widgets.OnboardingButtons
 import com.cc221005.meetapp.utils.getActionIcons
 import com.cc221005.meetapp.utils.getBottomBar
 import com.cc221005.meetapp.utils.getNavigationIcon
@@ -48,7 +43,7 @@ import com.google.firebase.firestore.SetOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: FirebaseAuth, db: FirebaseFirestore) {
+fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: FirebaseAuth, db: FirebaseFirestore, searchModel: SearchModel) {
     val navState = navigationModel.navigationState.collectAsState()
     val userState = userModel.userState.collectAsState()
     val selectedScreen = navState.value.selectedScreen
@@ -56,8 +51,8 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
 
     Scaffold(
             topBar = {
-                if(userState.value.currentUser != null) TopAppBar(
-                    title = { Text(text = getTitle(screen = selectedScreen)) },
+                if(userState.value.localUser != null) TopAppBar(
+                    title = { getTitle(screen = selectedScreen, searchModel = searchModel) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.background
@@ -72,7 +67,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                 NavHost(
                     navController = navController,
                     modifier = Modifier.padding(it),
-                    startDestination = if(userState.value.currentUser != null) Screen.Home.route else Screen.OnboardingFlow1.route,
+                    startDestination = if(userState.value.localUser != null) Screen.Home.route else Screen.OnboardingFlow1.route,
                 ) {
                     // Onboarding Screens
                     composable(Screen.OnboardingFlow1.route) {

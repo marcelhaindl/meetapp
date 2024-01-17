@@ -39,7 +39,7 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
             auth.signInWithEmailAndPassword(userModel.userState.value.email, userModel.userState.value.password)
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful) {
-                        userModel.updateFirebaseUser(auth.currentUser)
+                        userModel.setLocalUserTo(auth.currentUser)
                     } else {
                         Toast.makeText(
                             context,
@@ -88,11 +88,11 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
         }
 
         Screen.OnboardingFlow6 -> return {
-            userModel.updateFirebaseUser(auth.currentUser)
+            userModel.setLocalUserTo(auth.currentUser)
         }
 
         else -> return {
-            if(userModel.userState.value.currentUser == null) navController.navigate(Screen.OnboardingFlow1.route)
+            if(userModel.userState.value.localUser == null) navController.navigate(Screen.OnboardingFlow1.route)
         }
     }
 }

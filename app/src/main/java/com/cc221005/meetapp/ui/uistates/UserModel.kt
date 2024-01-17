@@ -20,10 +20,11 @@ class UserModel : ViewModel() {
         }
     }
 
-    fun updateFirebaseUser(user: FirebaseUser?) {
+    fun setLocalUserTo(user: FirebaseUser?) {
         viewModelScope.launch {
-            _userState.update { it.copy(currentUser = user) }
+            _userState.update { it.copy(localUser = user) }
         }
+
     }
 
     fun updateUsernameAndName(username: String, name: String) {
