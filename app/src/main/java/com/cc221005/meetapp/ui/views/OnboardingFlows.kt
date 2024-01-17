@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
-import com.cc221005.meetapp.ui.uistates.LoginModel
+import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.OnboardingPagination
 
 @Composable
@@ -121,14 +132,15 @@ fun OnboardingFlow2() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingFlow3(navController: NavController, loginModel: LoginModel) {
-    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+fun OnboardingFlow3(navController: NavController, userModel: UserModel) {
+    val userState = userModel.userState.collectAsState()
+    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(userState.value.email)) }
     var password by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
 
     var showPassword by remember { mutableStateOf(value = false) }
 
     if(email.text.isNotEmpty() && password.text.isNotEmpty()) {
-        loginModel.updateEmailAndPassword(email = email.text, password = password.text)
+        userModel.updateEmailAndPassword(email = email.text, password = password.text)
     }
 
     Column(
@@ -202,11 +214,16 @@ fun OnboardingFlow3(navController: NavController, loginModel: LoginModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingFlow3Login(navController: NavController) {
-    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+fun OnboardingFlow3Login(navController: NavController, userModel: UserModel) {
+    val userState = userModel.userState.collectAsState()
+    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(userState.value.email)) }
     var password by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
 
     var showPassword by remember { mutableStateOf(value = false) }
+
+    if(email.text.isNotEmpty() && password.text.isNotEmpty()) {
+        userModel.updateEmailAndPassword(email = email.text, password = password.text)
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -279,11 +296,11 @@ fun OnboardingFlow3Login(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingFlow4(loginModel: LoginModel) {
+fun OnboardingFlow4(userModel: UserModel) {
     var username by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
 
-    loginModel.updateUsernameAndName(username = username.text, name = name.text)
+    userModel.updateUsernameAndName(username = username.text, name = name.text)
 
     Column(
             verticalArrangement = Arrangement.Center,
@@ -334,8 +351,38 @@ fun OnboardingFlow4(loginModel: LoginModel) {
         }
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun OnboardingFlow5() {
+fun OnboardingFlow5(userModel: UserModel) {
+    val userState = userModel.userState.collectAsState()
+    val interestList: List<String> = listOf(
+        "Lifestyle",
+        "Make-up",
+        "Sports",
+        "Music",
+        "Travel",
+        "Food",
+        "Technology",
+        "Art",
+        "Fitness",
+        "Reading",
+        "Gaming",
+        "Movies",
+        "Fashion",
+        "Photography",
+        "Cooking",
+        "Outdoor Activities",
+        "Crafting",
+        "Science",
+        "Writing",
+        "Health",
+        "Dancing",
+        "Pets",
+        "Cars",
+        "Gardening",
+        "History",
+        "Yoga"
+    )
     Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -344,7 +391,31 @@ fun OnboardingFlow5() {
                 .padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            // TODO: Interest Chips
+            FlowRow(
+                horizontalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                interestList.forEach { interest ->
+                    FilterChip(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        selected = userState.value.interests.contains(interest),
+                        enabled = true,
+                        colors = ChipDefaults.filterChipColors(selectedBackgroundColor = MaterialTheme.colorScheme.primary),
+                        onClick = {
+                            if(userState.value.interests.contains(interest)) userModel.removeInterestItem(interest)
+                            else userModel.addInterestItem(interest)
+                    }) {
+                        Text(
+                            text = interest,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if(userState.value.interests.contains(interest)) MaterialTheme.colorScheme.onPrimary
+                                    else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.what_s_your_thing),
@@ -356,7 +427,6 @@ fun OnboardingFlow5() {
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center
             )
-            // TODO: Add Interests and Hobbies Chips
             Spacer(modifier = Modifier.weight(1f))
             OnboardingPagination(Screen.OnboardingFlow5)
             Spacer(modifier = Modifier.height(24.dp))

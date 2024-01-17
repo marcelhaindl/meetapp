@@ -13,5 +13,4 @@ sealed class Screen(val route: String){
     object OnboardingFlow4: Screen("onboardingflow4")
     object OnboardingFlow5: Screen("onboardingflow5")
     object OnboardingFlow6: Screen("onboardingflow6")
-    object Navigation: Screen("navigation")
 }
