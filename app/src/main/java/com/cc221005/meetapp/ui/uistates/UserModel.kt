@@ -1,7 +1,9 @@
 package com.cc221005.meetapp.ui.uistates
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cc221005.meetapp.User
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,11 +22,22 @@ class UserModel : ViewModel() {
         }
     }
 
-    fun setLocalUserTo(user: FirebaseUser?) {
+    fun setLocalUserTo(user: User?) {
         viewModelScope.launch {
-            _userState.update { it.copy(localUser = user) }
+            _userState.update { currentState ->
+                user?.let {
+                    currentState.copy(
+                        localUser = currentState.localUser?.copy(
+                            uid = it.uid,
+                            email = it.email,
+                            username = it.username,
+                            name = it.name,
+                            interests = it.interests?.toMutableList()
+                        ) ?: it
+                    )
+                } ?: currentState.copy(localUser = null)
+            }
         }
-
     }
 
     fun updateUsernameAndName(username: String, name: String) {
@@ -49,6 +62,12 @@ class UserModel : ViewModel() {
                 remove(interest)
             }
             _userState.value = _userState.value.copy(interests = updatedInterests)
+        }
+    }
+
+    fun dataIsInDatabase(isDataInDatabase: Boolean) {
+        viewModelScope.launch {
+            _userState.update { it.copy(isDataInDatabase = isDataInDatabase) }
         }
     }
 }

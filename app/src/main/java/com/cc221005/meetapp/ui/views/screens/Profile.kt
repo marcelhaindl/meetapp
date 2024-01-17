@@ -5,16 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.cc221005.meetapp.ui.uistates.UserModel
 
 @Composable
-fun Profile() {
+fun Profile(userModel: UserModel) {
+    val userState = userModel.userState.collectAsState()
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "Profile")
+        Text(text = userState.value.localUser?.name.toString())
     }
 }

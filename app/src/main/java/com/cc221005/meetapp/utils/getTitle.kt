@@ -1,5 +1,6 @@
 package com.cc221005.meetapp.utils
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,14 +35,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.SearchModel
+import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun getTitle(screen: Screen, searchModel: SearchModel) {
+fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
     var searchString by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(
         TextFieldValue("")
     ) }
+
+    val userState = userModel.userState.collectAsState()
 
     searchModel.updateSearchString(searchString = searchString.text)
 
@@ -50,7 +55,7 @@ fun getTitle(screen: Screen, searchModel: SearchModel) {
         Screen.Home -> Text(text = "Home")
         Screen.Create -> Text(text = "Create")
         Screen.Chat -> Text(text = "Chat")
-        Screen.Profile -> Text(text = "Profile")
+        Screen.Profile -> Text(text = userState.value.localUser?.username.toString())
         Screen.Settings -> Text(text = "Settings")
 
         Screen.Search ->
@@ -59,7 +64,8 @@ fun getTitle(screen: Screen, searchModel: SearchModel) {
                 onValueChange = { newValue: TextFieldValue -> searchString = newValue },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 16.dp).clip(shape = RoundedCornerShape(99.dp)),
+                    .padding(end = 16.dp)
+                    .clip(shape = RoundedCornerShape(99.dp)),
                 placeholder = { Text(text = stringResource(id = R.string.search) + "...") },
                 leadingIcon = { Icon(painter = painterResource(id = R.drawable.search), contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                 trailingIcon = {

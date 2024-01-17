@@ -1,9 +1,11 @@
 package com.cc221005.meetapp.utils
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.User
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +41,19 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
             auth.signInWithEmailAndPassword(userModel.userState.value.email, userModel.userState.value.password)
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful) {
-                        userModel.setLocalUserTo(auth.currentUser)
+                        auth.currentUser?.let { user -> db.collection("users").document(user.uid).get()
+                            .addOnSuccessListener { snapshot ->
+                                userModel.setLocalUserTo(
+                                    User(
+                                        uid = auth.currentUser?.uid,
+                                        email = auth.currentUser?.email,
+                                        username = snapshot.get("username").toString(),
+                                        name = snapshot.get("name").toString(),
+                                        interests = snapshot.get("interests") as? MutableList<String> ?: mutableListOf()
+                                    )
+                                )
+                            }
+                        }
                     } else {
                         Toast.makeText(
                             context,
@@ -88,7 +102,16 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
         }
 
         Screen.OnboardingFlow6 -> return {
-            userModel.setLocalUserTo(auth.currentUser)
+            userModel.setLocalUserTo(
+                User(
+                    uid = auth.currentUser?.uid,
+                    email = auth.currentUser?.uid,
+                    username = userModel.userState.value.username,
+                    name = userModel.userState.value.name,
+                    interests = userModel.userState.value.interests
+                )
+            )
+            userModel.dataIsInDatabase(true)
         }
 
         else -> return {

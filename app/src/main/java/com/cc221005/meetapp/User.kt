@@ -19,4 +19,7 @@ data class User (
             "interests" to interests
         )
     }
+    override fun toString(): String {
+        return "UserData(uid=$uid, email=$email, username=$username, name=$name, interests=$interests)"
+    }
 }

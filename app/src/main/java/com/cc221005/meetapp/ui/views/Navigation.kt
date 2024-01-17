@@ -1,5 +1,6 @@
 package com.cc221005.meetapp.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
@@ -51,8 +52,8 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
 
     Scaffold(
             topBar = {
-                if(userState.value.localUser != null) TopAppBar(
-                    title = { getTitle(screen = selectedScreen, searchModel = searchModel) },
+                if(userState.value.localUser != null && userState.value.isDataInDatabase) TopAppBar(
+                    title = { getTitle(screen = selectedScreen, searchModel = searchModel, userModel = userModel) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.background
@@ -67,7 +68,10 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                 NavHost(
                     navController = navController,
                     modifier = Modifier.padding(it),
-                    startDestination = if(userState.value.localUser != null) Screen.Home.route else Screen.OnboardingFlow1.route,
+                    startDestination =
+                    if(userState.value.localUser != null && userState.value.isDataInDatabase) Screen.Home.route
+                    else if(userState.value.localUser != null && !userState.value.isDataInDatabase) Screen.OnboardingFlow4.route
+                    else Screen.OnboardingFlow1.route,
                 ) {
                     // Onboarding Screens
                     composable(Screen.OnboardingFlow1.route) {
@@ -118,7 +122,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.Profile.route) {
                         navigationModel.selectScreen(Screen.Profile)
-                        Profile()
+                        Profile(userModel = userModel)
                     }
 
                     // Detailed Screens
