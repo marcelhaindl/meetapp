@@ -1,3 +1,0 @@
-utils - folder
-
-All global (more often used) functions

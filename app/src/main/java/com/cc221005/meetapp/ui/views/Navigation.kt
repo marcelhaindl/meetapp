@@ -5,8 +5,10 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
+import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -19,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -32,98 +35,16 @@ import com.cc221005.meetapp.ui.views.screens.Create
 import com.cc221005.meetapp.ui.views.screens.Home
 import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
+import com.cc221005.meetapp.ui.views.screens.Settings
 import com.cc221005.meetapp.ui.views.widgets.OnboardingButtons
+import com.cc221005.meetapp.utils.getActionIcons
+import com.cc221005.meetapp.utils.getBottomBar
+import com.cc221005.meetapp.utils.getNavigationIcon
+import com.cc221005.meetapp.utils.getTitle
+import com.cc221005.meetapp.utils.getTrailingButtonFunction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-
-
-fun getTrailingButtonFunction(navController: NavController, currentScreen: Screen, userModel: UserModel, auth: FirebaseAuth, context: Context, db: FirebaseFirestore): () -> Unit {
-    when(currentScreen) {
-        Screen.OnboardingFlow1 -> return {
-            navController.navigate(Screen.OnboardingFlow2.route)
-        }
-
-        Screen.OnboardingFlow2 -> return {
-            navController.navigate(Screen.OnboardingFlow3.route)
-        }
-
-        Screen.OnboardingFlow3 -> return {
-            auth.createUserWithEmailAndPassword(userModel.userState.value.email, userModel.userState.value.password)
-                .addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
-                        navController.navigate(Screen.OnboardingFlow4.route)
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.authentication_failed),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-                }
-        }
-
-        Screen.OnboardingFlow3Login -> return {
-            auth.signInWithEmailAndPassword(userModel.userState.value.email, userModel.userState.value.password)
-                .addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
-                        userModel.updateFirebaseUser(auth.currentUser)
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.authentication_failed),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-                }
-        }
-
-        Screen.OnboardingFlow4 -> return {
-            val data = hashMapOf(
-                "username" to userModel.userState.value.username,
-                "name" to userModel.userState.value.name
-            )
-            auth.currentUser?.let {
-                db.collection("users").document(it.uid)
-                    .set(data, SetOptions.merge())
-                    .addOnSuccessListener { navController.navigate(Screen.OnboardingFlow5.route) }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.failed_adding_data),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-            }
-        }
-
-        Screen.OnboardingFlow5 -> return {
-            val data = hashMapOf(
-                "interests" to userModel.userState.value.interests
-            )
-            auth.currentUser?.let {
-                db.collection("users").document(it.uid)
-                    .set(data, SetOptions.merge())
-                    .addOnSuccessListener { navController.navigate(Screen.OnboardingFlow6.route) }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.failed_adding_data),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-            }
-        }
-
-        Screen.OnboardingFlow6 -> return {
-            userModel.updateFirebaseUser(auth.currentUser)
-        }
-
-        else -> return {
-            if(userModel.userState.value.currentUser == null) navController.navigate(Screen.OnboardingFlow1.route)
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,45 +57,17 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
     Scaffold(
             topBar = {
                 if(userState.value.currentUser != null) TopAppBar(
-                    title = {
-                        Text(text = "MeetApp")
-                    },
+                    title = { Text(text = getTitle(screen = selectedScreen)) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.background
                     ),
-                    actions = {
-                        // Actions
-                    },
-                    navigationIcon = {
-                        // Navigation Icon
-                    }
+                    actions = { getActionIcons(screen = selectedScreen, navController = navController) },
+                    navigationIcon = { getNavigationIcon(screen = selectedScreen, navController = navController) }
                 )
             },
 
-            bottomBar = {
-                if(userState.value.currentUser != null) BottomNavigationBar(
-                    navController = navController,
-                    selectedScreen = selectedScreen
-                ) else OnboardingButtons(
-                    showLeadingButton = selectedScreen != Screen.OnboardingFlow1 && selectedScreen != Screen.OnboardingFlow4,
-                    navController = navController,
-                    onTrailingButtonClicked = getTrailingButtonFunction(
-                        navController = navController,
-                        currentScreen = selectedScreen,
-                        userModel = userModel,
-                        auth = auth,
-                        context = LocalContext.current,
-                        db = db
-                    ),
-                    trailingButtonText = when (selectedScreen) {
-                        Screen.OnboardingFlow3 -> "Sign up"
-                        Screen.OnboardingFlow3Login -> "Login"
-                        Screen.OnboardingFlow6 -> "Finish"
-                        else -> "Next"
-                    }
-                )
-            }
+            bottomBar = { getBottomBar(selectedScreen = selectedScreen, navController = navController, userModel = userModel, auth = auth, context = LocalContext.current, db = db) }
     ) {
                 NavHost(
                     navController = navController,
@@ -231,6 +124,12 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     composable(Screen.Profile.route) {
                         navigationModel.selectScreen(Screen.Profile)
                         Profile()
+                    }
+
+                    // Detailed Screens
+                    composable(Screen.Settings.route) {
+                        navigationModel.selectScreen(Screen.Settings)
+                        Settings(auth = auth, userModel = userModel)
                     }
             }
         }

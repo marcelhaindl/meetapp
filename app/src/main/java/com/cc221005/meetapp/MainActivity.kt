@@ -9,10 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import com.cc221005.meetapp.ui.theme.MeetappTheme
+import androidx.compose.ui.graphics.toArgb
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.views.Navigation
+import com.example.compose.MeetappTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -24,8 +25,6 @@ class MainActivity : ComponentActivity() {
 
     private val navigationModel = NavigationModel()
     private val userModel = UserModel()
-
-    private val isLoggedIn = userModel.userState.value.isLoggedIn
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +38,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MeetappTheme {
                 // A surface container using the 'background' color from the theme
+                window.statusBarColor = MaterialTheme.colorScheme.surface.toArgb()
+                window.navigationBarColor = MaterialTheme.colorScheme.surface.toArgb()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
