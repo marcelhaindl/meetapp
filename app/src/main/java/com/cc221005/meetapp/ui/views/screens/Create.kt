@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +50,8 @@ fun Create() {
     var date by remember { mutableStateOf(TextFieldValue("")) }
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var cost by remember { mutableStateOf(TextFieldValue("")) }
+    var attend by remember { mutableStateOf(TextFieldValue("")) }
+
 
 
 
@@ -211,7 +214,7 @@ fun Create() {
 
             TextField(
                 modifier = Modifier.width(155.dp),
-                value = cost,
+                value = attend,
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Gray,
                     disabledIndicatorColor = Color.Yellow,
@@ -228,7 +231,7 @@ fun Create() {
                 ),
 
                 onValueChange = { newText ->
-                    cost = newText
+                    attend = newText
                 },
 
                 label = { Text(text = "Max. attend.", style = TextStyle(fontFamily = FontFamily.Default)) },
@@ -254,7 +257,8 @@ fun Create() {
                 containerColor = Color.Black
             )
         ) {
-            Text(text = "Save", fontSize = 20.sp, style = TextStyle(fontFamily = FontFamily.Default))
+            Text(text = "Save", fontSize = 20.sp, style = TextStyle(fontFamily = FontFamily.Default),
+                fontWeight = FontWeight.Bold)
         }
     }
 }
