@@ -18,7 +18,8 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),
-                        contentDescription = stringResource(R.string.settings)
+                        contentDescription = stringResource(R.string.settings),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -29,13 +30,15 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                 IconButton(onClick = { /* TODO: Save Functionality */ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.save),
-                        contentDescription = stringResource(R.string.settings)
+                        contentDescription = stringResource(R.string.settings),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),
-                        contentDescription = stringResource(R.string.settings)
+                        contentDescription = stringResource(R.string.settings),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -43,13 +46,15 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                 IconButton(onClick = { /* TODO: Search Functionality */ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = stringResource(R.string.search)
+                        contentDescription = stringResource(R.string.search),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { /* TODO: Add Chat Functionality */ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.plus),
-                        contentDescription = stringResource(R.string.add_chat)
+                        contentDescription = stringResource(R.string.add_chat),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -57,13 +62,15 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                 IconButton(onClick = { /* TODO: Wishlist */ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
-                        contentDescription = stringResource(R.string.wishlist)
+                        contentDescription = stringResource(R.string.wishlist),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),
-                        contentDescription = stringResource(R.string.settings)
+                        contentDescription = stringResource(R.string.settings),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
