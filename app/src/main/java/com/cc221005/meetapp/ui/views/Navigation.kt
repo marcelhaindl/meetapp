@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
@@ -32,6 +33,7 @@ import com.cc221005.meetapp.ui.views.screens.Create
 import com.cc221005.meetapp.ui.views.screens.Home
 import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
+import com.cc221005.meetapp.ui.views.screens.SelectTheme
 import com.cc221005.meetapp.ui.views.screens.Settings
 import com.cc221005.meetapp.ui.views.screens.SpecificUser
 import com.cc221005.meetapp.utils.getActionIcons
@@ -129,7 +131,11 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     // Detailed Screens
                     composable(Screen.Settings.route) {
                         navigationModel.selectScreen(Screen.Settings)
-                        Settings(auth = auth, userModel = userModel)
+                        Settings(auth = auth, userModel = userModel, navController = navController)
+                    }
+                    composable(Screen.Theme.route) {
+                        navigationModel.selectScreen(Screen.Theme)
+                        SelectTheme(navigationModel = navigationModel)
                     }
                     composable(Screen.SpecificUser.route) {
                         navigationModel.selectScreen(Screen.SpecificUser)

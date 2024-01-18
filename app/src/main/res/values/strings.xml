@@ -39,4 +39,17 @@
     <string name="logout">Log out</string>
     <string name="close">Close</string>
     <string name="no_users_found">No users found!</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="notifications">Notification</string>
+    <string name="privacy">Privacy</string>
+    <string name="security">Security</string>
+    <string name="language">Language</string>
+    <string name="theme">Theme</string>
+    <string name="legal_and_compliance">Legal and Compliance</string>
+    <string name="about_meetapp">About MeetApp</string>
+    <string name="feedback_and_support">Feedback and support</string>
+    <string name="arrow_right">Arrow Right</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="system_default">System Default</string>
 </resources>

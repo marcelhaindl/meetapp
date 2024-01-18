@@ -7,6 +7,7 @@ sealed class Screen(val route: String){
     object Chat: Screen("chat")
     object Profile: Screen("profile")
     object Settings: Screen("settings")
+    object Theme: Screen("theme")
     object SpecificUser: Screen("specificuser")
     object OnboardingFlow1: Screen("onboardingflow1")
     object OnboardingFlow2: Screen("onboardingflow2")

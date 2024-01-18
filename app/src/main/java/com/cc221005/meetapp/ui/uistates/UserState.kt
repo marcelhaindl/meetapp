@@ -8,7 +8,7 @@ data class UserState(
     val password: String = "",
     val username: String = "",
     val name: String = "",
-    val localUser: User? = null,
     val interests: MutableList<String> = mutableListOf(),
+    val localUser: User? = null,
     val isDataInDatabase: Boolean = false,
 )

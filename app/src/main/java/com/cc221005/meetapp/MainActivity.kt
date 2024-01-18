@@ -3,9 +3,12 @@ package com.cc221005.meetapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +30,7 @@ class MainActivity : ComponentActivity() {
     private val userModel = UserModel()
 
     private val searchModel = SearchModel(db = db)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +59,16 @@ class MainActivity : ComponentActivity() {
                 }
         } else userModel.setLocalUserTo(null)
         setContent {
-            MeetappTheme {
+            val themeState by navigationModel.navigationState.collectAsState()
+
+            MeetappTheme (
+                useDarkTheme =
+                when (themeState.theme) {
+                    0 -> true
+                    1 -> false
+                    else -> isSystemInDarkTheme()
+                }
+            ) {
                 // A surface container using the 'background' color from the theme
                 window.statusBarColor = MaterialTheme.colorScheme.surface.toArgb()
                 window.navigationBarColor = MaterialTheme.colorScheme.surface.toArgb()

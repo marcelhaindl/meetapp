@@ -42,6 +42,7 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
     ) }
 
     val userState = userModel.userState.collectAsState()
+    val searchState = searchModel.searchState.collectAsState()
 
     searchModel.updateSearch(searchString = searchString.text)
 
@@ -53,8 +54,8 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
         Screen.Chat -> Text(text = "Chat")
         Screen.Profile -> Text(text = userState.value.localUser?.username.toString())
         Screen.Settings -> Text(text = "Settings")
-        Screen.SpecificUser -> Text(text = searchModel.searchState.value.specificUser.username.toString())
-
+        Screen.SpecificUser -> Text(text = searchState.value.specificUser.username.toString())
+        Screen.Theme -> Text(text = "Theme")
         Screen.Search ->
             TextField(
                 value = searchString,
