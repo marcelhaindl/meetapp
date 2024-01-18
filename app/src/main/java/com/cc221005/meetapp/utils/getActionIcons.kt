@@ -74,6 +74,15 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                     )
                 }
             }
+            Screen.SpecificUser -> {
+                IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.settings),
+                        contentDescription = stringResource(R.string.settings),
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
             else -> { }
         }
 }

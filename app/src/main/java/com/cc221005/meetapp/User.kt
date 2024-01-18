@@ -13,7 +13,7 @@ data class User (
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "uid" to uid,
-            "email" to email,
+            "email" to email, // only for currently logged in user
             "username" to username,
             "name" to name,
             "interests" to interests

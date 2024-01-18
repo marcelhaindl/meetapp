@@ -38,4 +38,5 @@
     <string name="wishlist">Wishlist</string>
     <string name="logout">Log out</string>
     <string name="close">Close</string>
+    <string name="no_users_found">No users found!</string>
 </resources>

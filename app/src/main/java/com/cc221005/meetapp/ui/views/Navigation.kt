@@ -33,6 +33,7 @@ import com.cc221005.meetapp.ui.views.screens.Home
 import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
 import com.cc221005.meetapp.ui.views.screens.Settings
+import com.cc221005.meetapp.ui.views.screens.SpecificUser
 import com.cc221005.meetapp.utils.getActionIcons
 import com.cc221005.meetapp.utils.getBottomBar
 import com.cc221005.meetapp.utils.getNavigationIcon
@@ -110,7 +111,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.Search.route) {
                         navigationModel.selectScreen(Screen.Search)
-                        Search()
+                        Search(searchModel = searchModel, navController = navController)
                     }
                     composable(Screen.Create.route) {
                         navigationModel.selectScreen(Screen.Create)
@@ -129,6 +130,10 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     composable(Screen.Settings.route) {
                         navigationModel.selectScreen(Screen.Settings)
                         Settings(auth = auth, userModel = userModel)
+                    }
+                    composable(Screen.SpecificUser.route) {
+                        navigationModel.selectScreen(Screen.SpecificUser)
+                        SpecificUser(searchModel = searchModel)
                     }
             }
         }

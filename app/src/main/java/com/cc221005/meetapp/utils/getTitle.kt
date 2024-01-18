@@ -1,9 +1,6 @@
 package com.cc221005.meetapp.utils
 
-import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.cc221005.meetapp.R
@@ -47,7 +43,7 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
 
     val userState = userModel.userState.collectAsState()
 
-    searchModel.updateSearchString(searchString = searchString.text)
+    searchModel.updateSearch(searchString = searchString.text)
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -57,6 +53,7 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
         Screen.Chat -> Text(text = "Chat")
         Screen.Profile -> Text(text = userState.value.localUser?.username.toString())
         Screen.Settings -> Text(text = "Settings")
+        Screen.SpecificUser -> Text(text = searchModel.searchState.value.specificUser.username.toString())
 
         Screen.Search ->
             TextField(
