@@ -101,7 +101,7 @@ fun Navigation(navigationModel: NavigationModel) {
                 NavHost(
                     navController = navController,
                     modifier = Modifier.padding(it),
-                    startDestination = Screen.Profile.route,
+                    startDestination = Screen.Home.route,
                 ) {
                     composable(Screen.Home.route) {
                         navigationModel.selectScreen(Screen.Home)
