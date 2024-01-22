@@ -52,4 +52,19 @@
     <string name="dark_theme">Dark Theme</string>
     <string name="light_theme">Light Theme</string>
     <string name="system_default">System Default</string>
+    <string name="default_event_image">Default Event Image</string>
+    <string name="title">Title*</string>
+    <string name="date">Date*</string>
+    <string name="description">Description</string>
+    <string name="cost">€/ticket</string>
+    <string name="max_attend">Max. attend.</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="visited">Visited</string>
+    <string name="hosted">Hosted</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="no_hosted_events">No hosted events!</string>
+    <string name="no_upcoming_events">No upcoming events!</string>
+    <string name="no_visited_events">No visited events!</string>
 </resources>

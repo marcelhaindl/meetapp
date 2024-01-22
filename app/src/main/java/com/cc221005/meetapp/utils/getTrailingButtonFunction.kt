@@ -111,7 +111,6 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
                     interests = userModel.userState.value.interests
                 )
             )
-            userModel.dataIsInDatabase(true)
         }
 
         else -> return {

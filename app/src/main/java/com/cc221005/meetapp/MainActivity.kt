@@ -1,6 +1,8 @@
 package com.cc221005.meetapp
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -11,7 +13,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.SearchModel
@@ -27,10 +31,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
 
     private val navigationModel = NavigationModel()
-    private val userModel = UserModel()
+    private val userModel = UserModel(db = db)
 
     private val searchModel = SearchModel(db = db)
 
+    private val eventModel = EventModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +48,6 @@ class MainActivity : ComponentActivity() {
         if(auth.currentUser != null) {
             db.collection("users").document(auth.currentUser!!.uid).get()
                 .addOnSuccessListener { snapshot ->
-                    userModel.dataIsInDatabase(snapshot.exists())
                     if (snapshot.exists()) {
                         // Snapshot (User data) exists
                         val user = User(
@@ -55,6 +59,9 @@ class MainActivity : ComponentActivity() {
                                 ?: mutableListOf()
                         )
                         userModel.setLocalUserTo(user)
+                    } else {
+                        userModel.setLocalUserTo(null)
+                        Log.e("Error", "Error while initially saving user")
                     }
                 }
         } else userModel.setLocalUserTo(null)
@@ -76,7 +83,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(navigationModel = navigationModel, userModel = userModel, auth = auth, db = db, searchModel = searchModel)
+                    Navigation(navigationModel = navigationModel, userModel = userModel, auth = auth, db = db, searchModel = searchModel, eventModel = eventModel)
                 }
             }
         }

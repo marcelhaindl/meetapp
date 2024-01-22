@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.SearchModel
@@ -47,7 +48,7 @@ import com.google.firebase.firestore.SetOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: FirebaseAuth, db: FirebaseFirestore, searchModel: SearchModel) {
+fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: FirebaseAuth, db: FirebaseFirestore, searchModel: SearchModel, eventModel: EventModel) {
     val navState = navigationModel.navigationState.collectAsState()
     val userState = userModel.userState.collectAsState()
     val selectedScreen = navState.value.selectedScreen
@@ -55,7 +56,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
 
     Scaffold(
             topBar = {
-                if(userState.value.localUser != null && userState.value.isDataInDatabase) TopAppBar(
+                if(userState.value.localUser != null) TopAppBar(
                     title = { getTitle(screen = selectedScreen, searchModel = searchModel, userModel = userModel) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
@@ -72,8 +73,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     navController = navController,
                     modifier = Modifier.padding(it),
                     startDestination =
-                    if(userState.value.localUser != null && userState.value.isDataInDatabase) Screen.Home.route
-                    else if(userState.value.localUser != null && !userState.value.isDataInDatabase) Screen.OnboardingFlow4.route
+                    if(userState.value.localUser != null) Screen.Home.route
                     else Screen.OnboardingFlow1.route,
                 ) {
                     // Onboarding Screens
@@ -117,7 +117,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.Create.route) {
                         navigationModel.selectScreen(Screen.Create)
-                        Create()
+                        Create(navigationModel = navigationModel, eventModel = eventModel)
                     }
                     composable(Screen.Chat.route) {
                         navigationModel.selectScreen(Screen.Chat)

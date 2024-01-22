@@ -2,6 +2,7 @@ package com.example.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -74,8 +75,8 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun MeetappTheme(
-  useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
 ) {
   val colors = if (!useDarkTheme) {
     LightColors
