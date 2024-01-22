@@ -1,5 +1,9 @@
 package com.cc221005.meetapp.ui.views.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -58,7 +61,7 @@ import androidx.compose.ui.unit.sp
 import com.cc221005.meetapp.R
 
 @Composable
-fun Profile() {
+fun User() {
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,7 +121,7 @@ fun Profile() {
             .padding(start = 20.dp)
             .padding(end = 20.dp),
             text = "I’m Trevor, a 28-year-old graphic designer living in Los Angeles. " +
-                "I love connecting with others in my community.",
+                    "I love connecting with others in my community.",
             style = TextStyle(fontFamily = FontFamily.Default, fontSize = 17.sp)
         )
 
@@ -133,7 +136,7 @@ fun Profile() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        //-------------------------------------Edit Button-------------------------------------
+        //-------------------------------------Follow Button-------------------------------------
         Button(
             onClick = { },
             modifier = Modifier
@@ -144,9 +147,38 @@ fun Profile() {
                 containerColor = Color.Black
             )
         ) {
-            Text(text = "Edit Profile", fontSize = 17.sp, style = TextStyle(fontFamily = FontFamily.Default),
+            Text(text = "Follow", fontSize = 17.sp, style = TextStyle(fontFamily = FontFamily.Default),
                 fontWeight = FontWeight.Bold)
         }
+
+        //-------------------------------------Unfolllow and Message Button-------------------------------------
+
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            OutlinedButton(
+                onClick = { },
+                modifier = Modifier.width(170.dp)
+            ) {
+                Text(text = "Unfollow", style = TextStyle(fontFamily = FontFamily.Default, fontSize = 18.sp),
+                    fontWeight = FontWeight.Bold, color = Color.Black)
+
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier.width(170.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                )
+            ) {
+                Text(text = "Message", style = TextStyle(fontFamily = FontFamily.Default, fontSize = 18.sp),
+                    fontWeight = FontWeight.Bold)
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -166,7 +198,7 @@ fun Profile() {
                 onClick = { hostedBorder.value = Color.Black
                     upcomingBorder.value = Color.Transparent
                     visitedBorder.value = Color.Transparent
-                          },
+                },
                 modifier = Modifier
                     .height(60.dp)
                     .drawWithContent {
@@ -206,7 +238,7 @@ fun Profile() {
                 onClick = { upcomingBorder.value = Color.Black
                     hostedBorder.value = Color.Transparent
                     visitedBorder.value = Color.Transparent
-                          },
+                },
                 modifier = Modifier
                     .height(60.dp)
                     .drawWithContent {
@@ -247,7 +279,7 @@ fun Profile() {
                 onClick = { visitedBorder.value = Color.Black
                     hostedBorder.value = Color.Transparent
                     upcomingBorder.value = Color.Transparent
-                          },
+                },
                 modifier = Modifier
                     .height(60.dp)
                     .drawWithContent {
@@ -349,4 +381,3 @@ fun Profile() {
 
     }
 }
-
