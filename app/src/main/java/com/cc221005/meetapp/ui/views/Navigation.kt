@@ -109,7 +109,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     // Main Screens
                     composable(Screen.Home.route) {
                         navigationModel.selectScreen(Screen.Home)
-                        Home()
+                        Home(userModel = userModel)
                     }
                     composable(Screen.Search.route) {
                         navigationModel.selectScreen(Screen.Search)
