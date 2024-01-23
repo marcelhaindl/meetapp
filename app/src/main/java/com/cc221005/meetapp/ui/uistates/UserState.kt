@@ -17,5 +17,5 @@ data class UserState(
     val recommendedEvents: MutableList<Event>? = mutableListOf(),
     val peopleWithSameInterests: MutableList<User>? = mutableListOf(),
     val topEventsNextWeek: MutableList<Event>? = mutableListOf(),
-    val technologyEvents: MutableList<Event>? = mutableListOf(), // TODO: Do variable based on interests (if interests are cars and tech then show a list of events for each interest)
+    val eventsForEachInterest: MutableMap<String, MutableList<Event>?> = mutableMapOf(),
 )

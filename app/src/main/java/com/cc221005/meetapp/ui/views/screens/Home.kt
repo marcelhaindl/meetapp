@@ -45,6 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,6 +57,7 @@ import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.HeadlineWithSubtextAndArrow
 import com.cc221005.meetapp.ui.views.widgets.LargeEventItem
 import com.cc221005.meetapp.ui.views.widgets.MeetUserItem
+import java.util.Locale
 
 @Composable
 fun Home(userModel: UserModel) {
@@ -67,8 +69,8 @@ fun Home(userModel: UserModel) {
     userModel.getPeopleWithSameInterests()
     // Get top events next week
     userModel.getTopEventsNextWeek()
-    // Get technology events
-    userModel.getTechnologyEvents()
+    // Get events for each interest
+    userModel.getEventsForEachInterest()
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -97,14 +99,13 @@ fun Home(userModel: UserModel) {
             // TODO: Display 5 first events
         }
 
-        Spacer(modifier = Modifier.height(36.dp))
-
-        HeadlineWithSubtextAndArrow(
-            headline = "Top Events",
-            subtext = "next week",
-            onclick = { }
-        )
-        if(!userState.value.peopleWithSameInterests.isNullOrEmpty()) {
+        if(!userState.value.topEventsNextWeek.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(36.dp))
+            HeadlineWithSubtextAndArrow(
+                headline = "Top Events",
+                subtext = "next week",
+                onclick = { }
+            )
             LazyRow(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
@@ -113,8 +114,6 @@ fun Home(userModel: UserModel) {
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
-        } else {
-            // TODO: Show some other 5 events
         }
 
         Spacer(modifier = Modifier.height(36.dp))
@@ -136,27 +135,31 @@ fun Home(userModel: UserModel) {
         } else {
             // TODO: Display 5 first users
         }
-        
 
-        if(!userState.value.technologyEvents.isNullOrEmpty()) {
-            Spacer(modifier = Modifier.height(36.dp))
+        // Show top events for each interest
+        userState.value.eventsForEachInterest.map {
+            val newInterestString: String = it.key.replaceFirstChar { firstChar ->
+                if (firstChar.isLowerCase()) firstChar.titlecase(Locale.ROOT) else firstChar.toString()
+            }
 
-            HeadlineWithSubtextAndArrow(
-                headline = "Technology",
-                subtext = "Find events about technology",
-                onclick = { }
-            )
+            if(it.value!!.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(36.dp))
 
-            LazyRow(
-                modifier = Modifier.padding(start = 16.dp)
-            ) {
-                items(userState.value.technologyEvents!!) { event ->
-                    LargeEventItem(event = event)
-                    Spacer(modifier = Modifier.width(16.dp))
+                HeadlineWithSubtextAndArrow(
+                    headline = "$newInterestString Events",
+                    subtext = "Find events about ${newInterestString.lowercase()}",
+                    onclick = { }
+                )
+
+                LazyRow(
+                    modifier = Modifier.padding(start = 16.dp)
+                ) {
+                    items(it.value!!) { event ->
+                        LargeEventItem(event = event)
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
                 }
             }
-        } else {
-            // TODO: Show some other 5 events
         }
 
 

@@ -1,6 +1,7 @@
 package com.cc221005.meetapp.ui.uistates
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-class SearchModel(private val db: FirebaseFirestore) : ViewModel() {
+class SearchModel(private val db: FirebaseFirestore, private val userModel: UserModel) : ViewModel() {
     private val _searchState = MutableStateFlow(SearchState())
     val searchState: StateFlow<SearchState> = _searchState.asStateFlow()
 
@@ -25,9 +26,11 @@ class SearchModel(private val db: FirebaseFirestore) : ViewModel() {
             .whereLessThanOrEqualTo("username", searchString + "\uf8ff")
             .get()
             .addOnSuccessListener { result ->
-                val users = result.documents.map { document ->
-                    document.toObject(User::class.java)!!
-                }
+                val users: MutableList<User> = result.documents.map { document ->
+                    document.toObject(User::class.java)?.apply { uid = document.id }
+                } as MutableList<User>
+
+                users.removeIf { it.uid == userModel.userState.value.localUser?.uid }
 
                 viewModelScope.launch {
                     _searchState.update { it.copy(loadedUsers = users) }

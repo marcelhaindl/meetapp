@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
     private val navigationModel = NavigationModel()
     private val userModel = UserModel(db = db)
 
-    private val searchModel = SearchModel(db = db)
+    private val searchModel = SearchModel(db = db, userModel = userModel)
 
     private val eventModel = EventModel()
 

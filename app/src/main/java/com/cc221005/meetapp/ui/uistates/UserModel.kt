@@ -93,22 +93,28 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             }
     }
 
-    fun getTechnologyEvents() {
-        db.collection("events")
-            .whereArrayContains("tags", "technology")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val technologyEvents: MutableList<Event> = snapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
-                } as MutableList<Event>
+    fun getEventsForEachInterest() {
+        _userState.value.localUser?.interests?.forEach { interest ->
+            db.collection("events")
+                .whereArrayContains("tags", interest.lowercase())
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    val interestEvents: MutableList<Event> = snapshot.documents.map { document ->
+                        document.toObject(Event::class.java)!!
+                    } as MutableList<Event>
 
-                viewModelScope.launch {
-                    _userState.update { it.copy(technologyEvents = technologyEvents) }
+                    viewModelScope.launch {
+                        _userState.update {
+                            it.copy(
+                                eventsForEachInterest = it.eventsForEachInterest.toMutableMap().apply {
+                                    this[interest] = interestEvents
+                                }
+                            )
+                        }
+                    }
+
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading technology events $exception")
-            }
+        }
     }
 
     fun getPeopleWithSameInterests() {
