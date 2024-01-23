@@ -1,12 +1,11 @@
 package com.cc221005.meetapp.ui.views
 
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,11 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Chip
 import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FilterChip
@@ -50,6 +45,8 @@ import androidx.navigation.NavController
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.OnboardingPagination
+import com.example.compose.md_theme_dark_surfaceContainer
+import com.example.compose.md_theme_light_surfaceContainer
 
 @Composable
 fun OnboardingFlow1() {
@@ -399,18 +396,21 @@ fun OnboardingFlow5(userModel: UserModel) {
                 interestList.forEach { interest ->
                     FilterChip(
                         modifier = Modifier.padding(horizontal = 4.dp),
-                        selected = userState.value.interests.contains(interest),
+                        selected = userState.value.onboardingInterestList.contains(interest.lowercase()),
                         enabled = true,
-                        colors = ChipDefaults.filterChipColors(selectedBackgroundColor = MaterialTheme.colorScheme.primary),
+                        colors = ChipDefaults.filterChipColors(
+                            backgroundColor = if(isSystemInDarkTheme()) md_theme_dark_surfaceContainer else md_theme_light_surfaceContainer,
+                            selectedBackgroundColor = MaterialTheme.colorScheme.primary,
+                        ),
                         onClick = {
-                            if(userState.value.interests.contains(interest)) userModel.removeInterestItem(interest)
-                            else userModel.addInterestItem(interest)
-                    }) {
+                            if(userState.value.onboardingInterestList.contains(interest.lowercase())) userModel.removeInterestItem(interest)
+                            else userModel.addInterestItem(interest.lowercase())
+                        }) {
                         Text(
                             text = interest,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if(userState.value.interests.contains(interest)) MaterialTheme.colorScheme.onPrimary
-                                    else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(userState.value.onboardingInterestList.contains(interest.lowercase())) MaterialTheme.colorScheme.onPrimary
+                                    else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

@@ -1,7 +1,6 @@
 package com.cc221005.meetapp.utils
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
@@ -49,7 +48,9 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
                                         email = auth.currentUser?.email,
                                         username = snapshot.get("username").toString(),
                                         name = snapshot.get("name").toString(),
-                                        interests = snapshot.get("interests") as? MutableList<String> ?: mutableListOf()
+                                        interests = snapshot.get("interests") as? MutableList<String> ?: mutableListOf(),
+                                        biography = if(snapshot.get("biography") != null && snapshot.get("biography") != "") snapshot.get("biography").toString()
+                                        else ""
                                     )
                                 )
                             }
@@ -66,8 +67,8 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
 
         Screen.OnboardingFlow4 -> return {
             val data = hashMapOf(
-                "username" to userModel.userState.value.username,
-                "name" to userModel.userState.value.name
+                "username" to userModel.userState.value.onboardingUsername,
+                "name" to userModel.userState.value.onboardingName
             )
             auth.currentUser?.let {
                 db.collection("users").document(it.uid)
@@ -85,7 +86,7 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
 
         Screen.OnboardingFlow5 -> return {
             val data = hashMapOf(
-                "interests" to userModel.userState.value.interests
+                "interests" to userModel.userState.value.onboardingInterestList
             )
             auth.currentUser?.let {
                 db.collection("users").document(it.uid)
@@ -102,15 +103,7 @@ fun getTrailingButtonFunction(navController: NavController, currentScreen: Scree
         }
 
         Screen.OnboardingFlow6 -> return {
-            userModel.setLocalUserTo(
-                User(
-                    uid = auth.currentUser?.uid,
-                    email = auth.currentUser?.uid,
-                    username = userModel.userState.value.username,
-                    name = userModel.userState.value.name,
-                    interests = userModel.userState.value.interests
-                )
-            )
+            userModel.saveCurrentUser(auth.currentUser?.uid.toString())
         }
 
         else -> return {

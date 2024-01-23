@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         // Check if user is signed in and if data is already saved
         if(auth.currentUser != null) {
+
             db.collection("users").document(auth.currentUser!!.uid).get()
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
@@ -56,15 +57,25 @@ class MainActivity : ComponentActivity() {
                             username = snapshot.get("username").toString(),
                             name = snapshot.get("name").toString(),
                             interests = snapshot.get("interests") as? MutableList<String>
-                                ?: mutableListOf()
+                                ?: mutableListOf(),
+                            followers = snapshot.get("followers") as? MutableList<String>
+                                ?: mutableListOf(),
+                            following = snapshot.get("following") as? MutableList<String>
+                                ?: mutableListOf(),
+                            biography = if(snapshot.get("biography") != null && snapshot.get("biography") != "") snapshot.get("biography").toString()
+                                        else ""
                         )
+
                         userModel.setLocalUserTo(user)
                     } else {
                         userModel.setLocalUserTo(null)
                         Log.e("Error", "Error while initially saving user")
                     }
+
                 }
-        } else userModel.setLocalUserTo(null)
+        } else {
+            userModel.setLocalUserTo(null)
+        }
         setContent {
             val themeState by navigationModel.navigationState.collectAsState()
 

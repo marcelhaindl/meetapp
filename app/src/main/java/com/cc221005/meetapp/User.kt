@@ -2,7 +2,7 @@ package com.cc221005.meetapp
 
 import com.google.firebase.firestore.Exclude
 
-data class User (
+data class User(
     var uid: String? = "",
     var email: String? = "",
     var username: String? = "",

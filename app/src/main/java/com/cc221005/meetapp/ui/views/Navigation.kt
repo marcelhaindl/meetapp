@@ -56,7 +56,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
 
     Scaffold(
             topBar = {
-                if(userState.value.localUser != null) TopAppBar(
+                if(userState.value.localUser != null && !userState.value.localUser?.interests.isNullOrEmpty()) TopAppBar(
                     title = { getTitle(screen = selectedScreen, searchModel = searchModel, userModel = userModel) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
@@ -66,14 +66,14 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     navigationIcon = { getNavigationIcon(screen = selectedScreen, navController = navController) }
                 )
             },
-
             bottomBar = { getBottomBar(selectedScreen = selectedScreen, navController = navController, userModel = userModel, auth = auth, context = LocalContext.current, db = db) }
     ) {
                 NavHost(
                     navController = navController,
                     modifier = Modifier.padding(it),
                     startDestination =
-                    if(userState.value.localUser != null) Screen.Home.route
+                    if(userState.value.localUser?.interests.isNullOrEmpty() && userState.value.localUser != null) Screen.OnboardingFlow5.route
+                    else if(userState.value.localUser != null) Screen.Home.route
                     else Screen.OnboardingFlow1.route,
                 ) {
                     // Onboarding Screens

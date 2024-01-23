@@ -1,5 +1,7 @@
 package com.cc221005.meetapp.ui.views.screens
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -78,6 +80,7 @@ import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.SmallEventItem
 import com.google.firebase.components.Lazy
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Profile(userModel: UserModel) {
@@ -91,6 +94,8 @@ fun Profile(userModel: UserModel) {
 
     // Load hosted, upcoming and visited events into User Model
     userModel.getEventsFromUserId(localUser?.uid.toString())
+
+    Log.e("asdf", userModel.userState.value.localUser.toString())
 
     LazyColumn (
         verticalArrangement = Arrangement.Top,
@@ -165,9 +170,7 @@ fun Profile(userModel: UserModel) {
                 Spacer(modifier = Modifier.height(32.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = if (localUser?.biography.toString()
-                            .isNullOrEmpty()
-                    ) "Hi, I am ${localUser?.name} and this is my MeetApp Account. Let's discover new events together."
+                    text = if (localUser?.biography.isNullOrEmpty()) "Hi, I am ${localUser?.name} and this is my MeetApp Account. Let's discover new events together."
                     else localUser?.biography.toString(),
                     color = MaterialTheme.colorScheme.onSurface,
                 )

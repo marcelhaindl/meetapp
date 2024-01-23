@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.User
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,20 +30,26 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                 user?.let {
                     currentState.copy(
                         localUser = currentState.localUser?.copy(
-                            uid = it.uid,
-                            email = it.email,
-                            username = it.username,
-                            name = it.name,
-                            interests = it.interests?.toMutableList(),
-                            followers = it.followers?.toMutableList(),
-                            following = it.following?.toMutableList(),
-                            biography = it.biography,
+                            // Conditionally update properties based on the input user
+                            uid = it.uid.takeUnless { it.isNullOrEmpty() } ?: currentState.localUser.uid,
+                            email = it.email.takeUnless { it.isNullOrEmpty() } ?: currentState.localUser.email,
+                            username = it.username.takeUnless { it.isNullOrEmpty() } ?: currentState.localUser.username,
+                            name = it.name.takeUnless { it.isNullOrEmpty() } ?: currentState.localUser.name,
+                            interests = it.interests?.takeUnless { it.isNullOrEmpty() }?.toMutableList()
+                                ?: currentState.localUser.interests,
+                            followers = it.followers?.takeUnless { it.isNullOrEmpty() }?.toMutableList()
+                                ?: currentState.localUser.followers,
+                            following = it.following?.takeUnless { it.isNullOrEmpty() }?.toMutableList()
+                                ?: currentState.localUser.following,
+                            biography = it.biography.takeUnless { it.isNullOrEmpty() } ?: currentState.localUser.biography,
                         ) ?: it
                     )
                 } ?: currentState.copy(localUser = null)
             }
         }
     }
+
+
 
     fun getRecommendedEvents() {
         val userInterests = _userState.value.localUser?.interests ?: mutableListOf()
@@ -193,26 +198,38 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
 
     fun updateUsernameAndName(username: String, name: String) {
         viewModelScope.launch {
-            _userState.update { it.copy(username = username) }
-            _userState.update { it.copy(name = name) }
+            _userState.update { it.copy(onboardingUsername = username) }
+            _userState.update { it.copy(onboardingName = name) }
         }
     }
 
     fun addInterestItem(interest: String) {
         viewModelScope.launch {
-            val updatedInterests = _userState.value.interests.toMutableList().apply {
+            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
                 add(interest.lowercase())
             }
-            _userState.value = _userState.value.copy(interests = updatedInterests)
+            Log.e("Interest", updatedInterests.toString())
+            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
         }
     }
 
     fun removeInterestItem(interest: String) {
         viewModelScope.launch {
-            val updatedInterests = _userState.value.interests.toMutableList().apply {
+            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
                 remove(interest.lowercase())
             }
-            _userState.value = _userState.value.copy(interests = updatedInterests)
+            Log.e("Interest", updatedInterests.toString())
+
+            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
         }
+    }
+
+    fun saveCurrentUser(uid: String) {
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                setLocalUserTo(snapshot.toObject(User::class.java))
+            }
     }
 }
