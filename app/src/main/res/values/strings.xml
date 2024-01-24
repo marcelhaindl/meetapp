@@ -81,4 +81,9 @@
     <string name="failed_deleting_event">Failed deleting event!</string>
     <string name="delete_event">Delete event?</string>
     <string name="delete_event_dialog_text">Are you sure to delete this event? Your changes can\'t be undone!</string>
+    <string name="message">Message</string>
+    <string name="follow">Follow</string>
+    <string name="hosted_events_not_available">Hosted events not available</string>
+    <string name="upcoming_events_not_available">Upcoming events not available</string>
+    <string name="visited_events_not_available">Visited events not available</string>
 </resources>

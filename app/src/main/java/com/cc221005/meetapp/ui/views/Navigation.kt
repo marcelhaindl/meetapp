@@ -192,7 +192,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
             }
             composable(Screen.SpecificUser.route) {
                 navigationModel.selectScreen(Screen.SpecificUser)
-                SpecificUser(navController = navController, userModel = userModel)
+                SpecificUser(navController = navController, userModel = userModel, eventModel = eventModel)
             }
             composable(Screen.SpecificEvent.route) {
                 navigationModel.selectScreen(Screen.SpecificEvent)

@@ -15,6 +15,6 @@ fun Chat() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "Chat")
+        Text(text = "Coming soon...")
     }
 }
