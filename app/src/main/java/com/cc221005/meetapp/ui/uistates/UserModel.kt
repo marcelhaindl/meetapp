@@ -254,7 +254,8 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .document(uid)
             .get()
             .addOnSuccessListener { snapshot ->
-                setLocalUserTo(snapshot.toObject(User::class.java))
+                val user = snapshot.toObject(User::class.java)?.copy(uid = uid)
+                setLocalUserTo(user)
             }
     }
 }
