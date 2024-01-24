@@ -122,7 +122,7 @@ fun Home(navController: NavController, userModel: UserModel, eventModel: EventMo
 
         HeadlineWithSubtextAndArrow(
             headline = "Meet people",
-            subtext = "with the same interests",
+            subtext = "with similar interests",
             onclick = { }
         )
         if(!userState.value.peopleWithSameInterests.isNullOrEmpty()) {

@@ -82,7 +82,8 @@ fun MeetUserItem(navController: NavController, user: User, userModel: UserModel)
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally),
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(horizontal = 8.dp),
                 textAlign = TextAlign.Center
             )
 

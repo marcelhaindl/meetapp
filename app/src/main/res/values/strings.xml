@@ -68,4 +68,17 @@
     <string name="no_upcoming_events">No upcoming events!</string>
     <string name="no_visited_events">No visited events!</string>
     <string name="successfully_added_event">Successfully added event!</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="leave_without_saving">Leave without saving?</string>
+    <string name="back_without_saving_dialog_text">Are you sure to leave wihout saving? Your changes will be discarded!</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="successfully_updated_event">Successfully updated event!</string>
+    <string name="failed_updating_event">Failed updating event!</string>
+    <string name="tags">Tags</string>
+    <string name="successfully_deleted_event">Successfully deleted event!</string>
+    <string name="failed_deleting_event">Failed deleting event!</string>
+    <string name="delete_event">Delete event?</string>
+    <string name="delete_event_dialog_text">Are you sure to delete this event? Your changes can\'t be undone!</string>
 </resources>

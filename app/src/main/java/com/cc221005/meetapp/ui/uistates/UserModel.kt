@@ -33,10 +33,8 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                 if (task.isSuccessful) {
                     val snapshot = task.result
                     val user = snapshot?.toObject(User::class.java)
-                    Log.e("success", user?.username.toString())
                     callback(user)
                 } else {
-                    Log.e("failure", "Error getting user by ID", task.exception)
                     callback(null)
                 }
             }
@@ -86,7 +84,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { snapshot ->
                 val recommendedEvents: MutableList<Event> = snapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
+                    document.toObject(Event::class.java)!!.copy(id = document.id)
                 } as MutableList<Event>
 
                 viewModelScope.launch {
@@ -111,7 +109,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { snapshot ->
                 val topEventsNextWeek: MutableList<Event> = snapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
+                    document.toObject(Event::class.java)!!.copy(id = document.id)
                 } as MutableList<Event>
 
                 viewModelScope.launch {
@@ -130,7 +128,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                 .get()
                 .addOnSuccessListener { snapshot ->
                     val interestEvents: MutableList<Event> = snapshot.documents.map { document ->
-                        document.toObject(Event::class.java)!!
+                        document.toObject(Event::class.java)!!.copy(id = document.id)
                     } as MutableList<Event>
 
                     viewModelScope.launch {
@@ -157,7 +155,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { snapshot ->
                 val peopleWithSameInterests: MutableList<User> = snapshot.documents.map { document ->
-                    document.toObject(User::class.java)?.apply { uid = document.id }
+                    document.toObject(User::class.java)?.copy ( uid = document.id )
                 } as MutableList<User>
 
                 peopleWithSameInterests.removeIf { it.uid == _userState.value.localUser?.uid }
@@ -177,7 +175,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { hostedEventSnapshot ->
                 val hostedEvents: MutableList<Event> = hostedEventSnapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
+                    document.toObject(Event::class.java)!!.copy(id = document.id)
                 } as MutableList<Event>
 
                 viewModelScope.launch {
@@ -193,7 +191,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { upcomingEventSnapshot ->
                 val upcomingEvents = upcomingEventSnapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
+                    document.toObject(Event::class.java)!!.copy(id = document.id)
                 } as MutableList<Event>
 
                 viewModelScope.launch {
@@ -209,7 +207,7 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             .get()
             .addOnSuccessListener { visitedEventSnapshot ->
                 val visitedEvents = visitedEventSnapshot.documents.map { document ->
-                    document.toObject(Event::class.java)!!
+                    document.toObject(Event::class.java)!!.copy(id = document.id)
                 } as MutableList<Event>
 
                 viewModelScope.launch {

@@ -17,6 +17,18 @@ class NavigationModel : ViewModel() {
         _navigationState.update { it.copy(selectedScreen = screen) }
     }
 
+    fun showBackWithoutSavingDialog(show: Boolean) {
+        viewModelScope.launch {
+            _navigationState.update { it.copy(isBackWithoutSavingDialogOpen = show) }
+        }
+    }
+
+    fun showDeleteEventDialog(show: Boolean) {
+        viewModelScope.launch {
+            _navigationState.update { it.copy(isDeleteEventDialogOpen = show) }
+        }
+    }
+
     fun updateTheme(theme: Number) {
         /**
          * # updateTheme

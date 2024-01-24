@@ -1,5 +1,6 @@
 package com.cc221005.meetapp
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
     private val searchModel = SearchModel(db = db, userModel = userModel)
 
-    private val eventModel = EventModel()
+    private val eventModel = EventModel(db = db)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

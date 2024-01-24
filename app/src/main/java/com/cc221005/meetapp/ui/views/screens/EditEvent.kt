@@ -22,9 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -54,41 +51,30 @@ import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.UserModel
+import com.cc221005.meetapp.ui.uistates.UserState
 import com.cc221005.meetapp.ui.views.widgets.MyDatePicker
 import com.google.firebase.Timestamp
 import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: UserModel) {
-
+fun EditEvent(eventModel: EventModel, navigationModel: NavigationModel) {
     val eventState = eventModel.eventState.collectAsState()
-    val userState = userModel.userState.collectAsState()
 
-    var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(eventState.value.addEvent.title ?: "")) }
-    var description by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.description ?: "")) }
-    var cost by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.cost.toString() ?: "")) }
-    var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.maxAttendees.toString() ?: "")) }
-    var tags by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.tags!!.joinToString(", ") ?: "")) }
+    var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(eventState.value.editEvent.title ?: "")) }
+    var description by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.description ?: "")) }
+    var cost by remember { mutableStateOf(TextFieldValue( eventState.value.editEvent.cost.toString() ?: "")) }
+    var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.maxAttendees.toString() ?: "")) }
+    var tags by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.tags!!.joinToString(", ") ?: "")) }
 
-    if(eventState.value.deleteAddEventFlag) {
-        title = TextFieldValue("")
-        description = TextFieldValue("")
-        cost = TextFieldValue(0.0.toString())
-        maxAttendees = TextFieldValue(0.toString())
-        tags = TextFieldValue("")
-        eventModel.updateAddEventDate(Timestamp.now())
-        eventModel.setDeleteAddEventFlag(false)
-    }
 
-    eventModel.updateAddEvent(
+    eventModel.updateEditEvent(
         Event(
             title = title.text,
             description = description.text,
             cost = cost.text.takeIf { it.isNotBlank() }?.toDoubleOrNull() ?: 0.0,
             maxAttendees = maxAttendees.text.takeIf { it.isNotBlank() }?.toIntOrNull() ?: 0,
             tags = tags.text.lowercase().split(", ").toMutableList(),
-            hostedBy = userState.value.localUser?.uid.toString()
         )
     )
 
@@ -137,7 +123,7 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: 
             label = stringResource(id = R.string.date),
             eventModel = eventModel,
             modifier = Modifier.fillMaxWidth(),
-            navigationModel = navigationModel
+            navigationModel = navigationModel,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -227,8 +213,5 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: 
                 )
             }
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
     }
 }

@@ -8,4 +8,5 @@ data class EventState(
     val deleteAddEventFlag: Boolean = false,
     val specificEvent: Event = Event(),
     val hostedEventUser: User = User(),
+    val editEvent: Event = Event(),
 )

@@ -21,6 +21,7 @@ import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
+import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.utils.convertLocalDateTimeToTimestamp
 import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
 import com.cc221005.meetapp.utils.convertTimestampToLocalDateTime
@@ -44,6 +45,7 @@ import java.util.Date
 fun MyDatePicker(
     label: String,
     eventModel: EventModel,
+    navigationModel: NavigationModel,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     modifier: Modifier,
@@ -51,18 +53,25 @@ fun MyDatePicker(
     // Set the event state date depending on whether the selected screen is the AddEvent or the
     // EditEvent Screen
     val eventState = eventModel.eventState.collectAsState()
+    val navState = navigationModel.navigationState.collectAsState()
 
-    val eventTimestamp = eventState.value.addEvent.timestamp
-    val eventDateString = convertTimestampToFormattedDate(eventState.value.addEvent.timestamp)
+
+    val eventTimestamp =
+        if(navState.value.selectedScreen == Screen.EditEvent) eventState.value.editEvent.timestamp
+        else eventState.value.addEvent.timestamp
+    val eventDateString = if(navState.value.selectedScreen == Screen.EditEvent) convertTimestampToFormattedDate(eventState.value.editEvent.timestamp)
+        else convertTimestampToFormattedDate(eventState.value.addEvent.timestamp)
 
     // Date Picker Dialog
     val dialog = DatePickerDialog(
         LocalContext.current,
         { _, year, month, dayOfMonth ->
             val localDateTime = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0, 0)
-            eventModel.updateAddEventDate(
-                convertLocalDateTimeToTimestamp(localDateTime)
-            )
+            if(navState.value.selectedScreen == Screen.EditEvent) {
+                eventModel.updateEditEventDate(convertLocalDateTimeToTimestamp(localDateTime))
+            } else {
+                eventModel.updateAddEventDate(convertLocalDateTimeToTimestamp(localDateTime))
+            }
         },
         convertTimestampToLocalDateTime(eventTimestamp).year,
         convertTimestampToLocalDateTime(eventTimestamp).monthValue - 1,

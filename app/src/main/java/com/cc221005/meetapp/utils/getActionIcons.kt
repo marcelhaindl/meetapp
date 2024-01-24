@@ -14,9 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
+import com.cc221005.meetapp.ui.uistates.NavigationModel
+import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,8 +27,9 @@ import com.google.firebase.firestore.SetOptions
 import java.util.UUID
 
 @Composable
-fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFirestore, eventModel: EventModel, context: Context) {
+fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFirestore, eventModel: EventModel, context: Context, userModel: UserModel, navigationModel: NavigationModel) {
     val eventState = eventModel.eventState.collectAsState()
+    val userState = userModel.userState.collectAsState()
     when (screen) {
             Screen.Home -> {
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
@@ -51,10 +55,10 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                                         Toast.LENGTH_SHORT,
                                     ).show()
                                     navController.navigate(Screen.SpecificEvent.route)
-                                    eventModel.setSpecificEventTo(eventState.value.addEvent)
+                                    eventModel.setSpecificEventTo(eventState.value.addEvent.copy(id = eventId))
                                     eventModel.updateAddEvent(
                                         Event(
-                                            id = eventId,
+                                            id = "",
                                             title = "",
                                             description = "",
                                             timestamp = Timestamp.now(),
@@ -130,6 +134,43 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                         contentDescription = stringResource(R.string.settings),
                         tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                }
+            }
+            Screen.SpecificEvent -> {
+                if(eventState.value.hostedEventUser.uid == userState.value.localUser?.uid) {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.EditEvent.route)
+                        eventModel.setEditEventTo(eventState.value.specificEvent)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.edit),
+                            contentDescription = stringResource(R.string.edit),
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            Screen.EditEvent -> {
+                if(eventState.value.editEvent.title.isNotEmpty() &&
+                    eventState.value.editEvent.timestamp.toString().isNotEmpty()) {
+                    IconButton(onClick = {
+                        eventModel.saveEditedEvent(navController = navController, context = context)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.save),
+                            contentDescription = stringResource(R.string.save),
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    IconButton(onClick = {
+                        navigationModel.showDeleteEventDialog(true)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.delete),
+                            contentDescription = stringResource(R.string.delete),
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
             else -> { }

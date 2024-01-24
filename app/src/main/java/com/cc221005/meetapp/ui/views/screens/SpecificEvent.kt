@@ -45,9 +45,7 @@ fun SpecificEvent(navController: NavController, eventModel: EventModel, userMode
     val userState = userModel.userState.collectAsState()
 
     userModel.getUserById(eventState.value.specificEvent.hostedBy.toString()) { user ->
-        if (user != null) {
-            eventModel.setHostedEventUser(user = user, uid = eventState.value.specificEvent.hostedBy.toString())
-        }
+        eventModel.setHostedEventUser(user = user!!, uid = eventState.value.specificEvent.hostedBy.toString())
     }
 
 
@@ -77,7 +75,7 @@ fun SpecificEvent(navController: NavController, eventModel: EventModel, userMode
             AssistChip(
                 onClick = { },
                 leadingIcon = { Icon(painter = painterResource(id = R.drawable.wallet_02), contentDescription = null) },
-                label = { Text(text = "${eventState.value.specificEvent.cost} € / ticket") }
+                label = { Text(text = String.format("%.2f € / ticket", eventState.value.specificEvent.cost)) }
             )
             Spacer(modifier = Modifier.width(16.dp))
             AssistChip(
@@ -102,6 +100,16 @@ fun SpecificEvent(navController: NavController, eventModel: EventModel, userMode
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        if(eventState.value.specificEvent.tags!!.isNotEmpty()) {
+            Text(
+                text = eventState.value.specificEvent.tags!!.joinToString(", "),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         Row {
             Text(
                 text = "hosted by ",
@@ -124,5 +132,8 @@ fun SpecificEvent(navController: NavController, eventModel: EventModel, userMode
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(text = eventState.value.specificEvent.description.toString())
+
+        Spacer(modifier = Modifier.height(24.dp))
+
     }
 }

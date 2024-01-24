@@ -60,6 +60,7 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel, eve
         Screen.SpecificUser -> Text(text = userState.value.specificUser.username.toString())
         Screen.Theme -> Text(text = "Theme")
         Screen.SpecificEvent -> Text(text = "Event")
+        Screen.EditEvent -> Text(text = "Edit Event")
         Screen.Search ->
             TextField(
                 value = searchString,

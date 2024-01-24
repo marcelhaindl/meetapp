@@ -97,8 +97,6 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
     // Load hosted, upcoming and visited events into User Model
     userModel.getEventsFromUserId(localUser?.uid.toString())
 
-    Log.e("asdf", userModel.userState.value.localUser.toString())
-
     LazyColumn (
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
