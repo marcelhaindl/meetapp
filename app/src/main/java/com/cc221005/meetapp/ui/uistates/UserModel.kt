@@ -40,6 +40,26 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             }
     }
 
+    fun getFirst5Users() {
+        db.collection("users")
+            .limit(5)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val users: MutableList<User> = snapshot.documents.map { document ->
+                    document.toObject(User::class.java)!!.copy(uid = document.id)
+                } as MutableList<User>
+
+                users.removeIf { it.uid == _userState.value.localUser?.uid }
+
+                viewModelScope.launch {
+                    _userState.update { it.copy(first5Users = users) }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Error", "Failed loading first 5 users $it")
+            }
+    }
+
 
     fun updateSpecificUser(user: User) {
         viewModelScope.launch {

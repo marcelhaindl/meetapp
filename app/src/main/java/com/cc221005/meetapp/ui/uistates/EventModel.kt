@@ -22,6 +22,24 @@ class EventModel(private val db: FirebaseFirestore) : ViewModel() {
     private val _eventState = MutableStateFlow(EventState())
     val eventState: StateFlow<EventState> = _eventState.asStateFlow()
 
+    fun getFirst5Events() {
+        db.collection("events")
+            .limit(5)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val events: MutableList<Event> = snapshot.documents.map { document ->
+                    document.toObject(Event::class.java)?.apply { id = document.id }
+                } as MutableList<Event>
+
+                viewModelScope.launch {
+                    _eventState.update { it.copy(first5Events = events) }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Error", "Failed loading first 5 events + $it")
+            }
+    }
+
     fun updateAddEvent(event: Event) {
         viewModelScope.launch {
             _eventState.update { currentState ->

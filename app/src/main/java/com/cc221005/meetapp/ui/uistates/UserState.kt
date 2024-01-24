@@ -17,5 +17,6 @@ data class UserState(
     val peopleWithSameInterests: MutableList<User>? = mutableListOf(),
     val topEventsNextWeek: MutableList<Event>? = mutableListOf(),
     val eventsForEachInterest: MutableMap<String, MutableList<Event>?> = mutableMapOf(),
-    val specificUser: User = User()
+    val specificUser: User = User(),
+    val first5Users: MutableList<User> = mutableListOf()
 )

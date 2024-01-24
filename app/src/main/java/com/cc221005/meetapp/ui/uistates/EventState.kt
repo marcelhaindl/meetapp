@@ -9,4 +9,5 @@ data class EventState(
     val specificEvent: Event = Event(),
     val hostedEventUser: User = User(),
     val editEvent: Event = Event(),
+    val first5Events: MutableList<Event> = mutableListOf()
 )

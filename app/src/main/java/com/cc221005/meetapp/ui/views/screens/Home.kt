@@ -64,6 +64,7 @@ import java.util.Locale
 @Composable
 fun Home(navController: NavController, userModel: UserModel, eventModel: EventModel) {
     val userState = userModel.userState.collectAsState()
+    val eventState = eventModel.eventState.collectAsState()
 
     // Get recommended events for the user
     userModel.getRecommendedEvents()
@@ -92,13 +93,21 @@ fun Home(navController: NavController, userModel: UserModel, eventModel: EventMo
             LazyRow(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                items(userState.value.recommendedEvents!!) { event ->
+                items(userState.value.recommendedEvents!!.take(5)) { event ->
                     LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         } else {
-            // TODO: Display 5 first events
+            eventModel.getFirst5Events()
+            LazyRow(
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                items(eventState.value.first5Events.take(5)) { event ->
+                    LargeEventItem(navController = navController, event = event, eventModel = eventModel)
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+            }
         }
 
         if(!userState.value.topEventsNextWeek.isNullOrEmpty()) {
@@ -111,7 +120,7 @@ fun Home(navController: NavController, userModel: UserModel, eventModel: EventMo
             LazyRow(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                items(userState.value.topEventsNextWeek!!) { event ->
+                items(userState.value.topEventsNextWeek!!.take(5)) { event ->
                     LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
@@ -129,13 +138,21 @@ fun Home(navController: NavController, userModel: UserModel, eventModel: EventMo
             LazyRow(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                items(userState.value.peopleWithSameInterests!!) { user ->
+                items(userState.value.peopleWithSameInterests!!.take(5)) { user ->
                     MeetUserItem(navController = navController, user = user, userModel = userModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         } else {
-            // TODO: Display 5 first users
+            userModel.getFirst5Users()
+            LazyRow(
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                items(userState.value.first5Users.take(5)) { user ->
+                    MeetUserItem(navController = navController, user = user, userModel = userModel)
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+            }
         }
 
         // Show top events for each interest
@@ -156,7 +173,7 @@ fun Home(navController: NavController, userModel: UserModel, eventModel: EventMo
                 LazyRow(
                     modifier = Modifier.padding(start = 16.dp)
                 ) {
-                    items(it.value!!) { event ->
+                    items(it.value!!.take(5)) { event ->
                         LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                         Spacer(modifier = Modifier.width(16.dp))
                     }
