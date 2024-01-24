@@ -1,6 +1,7 @@
 package com.cc221005.meetapp.utils
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
@@ -13,9 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.views.Screen
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import java.util.UUID
@@ -33,15 +36,13 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                     )
                 }
             }
-            Screen.Search -> {
-                // TODO: Implement search bar
-            }
             Screen.Create -> {
                 if(eventState.value.addEvent.title.isNotEmpty() &&
                         eventState.value.addEvent.timestamp.toString().isNotEmpty()) {
                     IconButton(
                         onClick = {
-                            db.collection("events").document(UUID.randomUUID().toString())
+                            val eventId: String = UUID.randomUUID().toString()
+                            db.collection("events").document(eventId)
                                 .set(eventState.value.addEvent.toMap(), SetOptions.merge())
                                 .addOnSuccessListener {
                                     Toast.makeText(
@@ -49,9 +50,25 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                                         context.getString(R.string.successfully_added_event),
                                         Toast.LENGTH_SHORT,
                                     ).show()
-                                    // TODO: Delete data
+                                    navController.navigate(Screen.SpecificEvent.route)
+                                    eventModel.setSpecificEventTo(eventState.value.addEvent)
+                                    eventModel.updateAddEvent(
+                                        Event(
+                                            id = eventId,
+                                            title = "",
+                                            description = "",
+                                            timestamp = Timestamp.now(),
+                                            cost = 0.0,
+                                            maxAttendees = 0,
+                                            hostedBy = "",
+                                            attendees = mutableListOf(),
+                                            visitedBy = mutableListOf(),
+                                            tags = mutableListOf(),
+                                        )
+                                    )
+                                    eventModel.setDeleteAddEventFlag(true)
                                 }
-                                .addOnSuccessListener {
+                                .addOnFailureListener() {
                                     Toast.makeText(
                                         context,
                                         context.getString(R.string.failed_adding_data),

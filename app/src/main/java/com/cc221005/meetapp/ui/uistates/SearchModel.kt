@@ -39,10 +39,4 @@ class SearchModel(private val db: FirebaseFirestore, private val userModel: User
                 }
             }
     }
-
-    fun updateSpecificUser(user: User) {
-        viewModelScope.launch {
-            _searchState.update { it.copy(specificUser = user) }
-        }
-    }
 }

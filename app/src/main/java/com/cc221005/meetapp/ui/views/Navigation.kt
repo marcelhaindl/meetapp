@@ -36,6 +36,7 @@ import com.cc221005.meetapp.ui.views.screens.Profile
 import com.cc221005.meetapp.ui.views.screens.Search
 import com.cc221005.meetapp.ui.views.screens.SelectTheme
 import com.cc221005.meetapp.ui.views.screens.Settings
+import com.cc221005.meetapp.ui.views.screens.SpecificEvent
 import com.cc221005.meetapp.ui.views.screens.SpecificUser
 import com.cc221005.meetapp.utils.getActionIcons
 import com.cc221005.meetapp.utils.getBottomBar
@@ -57,7 +58,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
     Scaffold(
             topBar = {
                 if(userState.value.localUser != null && !userState.value.localUser?.interests.isNullOrEmpty()) TopAppBar(
-                    title = { getTitle(screen = selectedScreen, searchModel = searchModel, userModel = userModel) },
+                    title = { getTitle(screen = selectedScreen, searchModel = searchModel, userModel = userModel, eventModel = eventModel) },
                     colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.background
@@ -109,11 +110,11 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     // Main Screens
                     composable(Screen.Home.route) {
                         navigationModel.selectScreen(Screen.Home)
-                        Home(userModel = userModel)
+                        Home(navController = navController, userModel = userModel, eventModel = eventModel)
                     }
                     composable(Screen.Search.route) {
                         navigationModel.selectScreen(Screen.Search)
-                        Search(searchModel = searchModel, navController = navController)
+                        Search(searchModel = searchModel, navController = navController, userModel = userModel)
                     }
                     composable(Screen.Create.route) {
                         navigationModel.selectScreen(Screen.Create)
@@ -125,7 +126,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.Profile.route) {
                         navigationModel.selectScreen(Screen.Profile)
-                        Profile(userModel = userModel)
+                        Profile(userModel = userModel, navController = navController, eventModel = eventModel)
                     }
 
                     // Detailed Screens
@@ -139,7 +140,11 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.SpecificUser.route) {
                         navigationModel.selectScreen(Screen.SpecificUser)
-                        SpecificUser(searchModel = searchModel)
+                        SpecificUser(navController = navController, userModel = userModel)
+                    }
+                    composable(Screen.SpecificEvent.route) {
+                        navigationModel.selectScreen(Screen.SpecificEvent)
+                        SpecificEvent(navController = navController, eventModel = eventModel, userModel = userModel)
                     }
             }
         }

@@ -22,18 +22,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.cc221005.meetapp.Event
+import com.cc221005.meetapp.ui.uistates.EventModel
+import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun SmallEventItem(event: Event) {
+fun SmallEventItem(navController: NavController, event: Event, eventModel: EventModel) {
     val date = convertTimestampToFormattedDate(event.timestamp)
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* TODO: onSmallEventItemClick */ }
+            .clickable {
+                eventModel.setSpecificEventTo(event)
+                navController.navigate(Screen.SpecificEvent.route)
+            }
             .padding(horizontal = 16.dp)
             .height(100.dp),
         verticalAlignment = Alignment.CenterVertically,

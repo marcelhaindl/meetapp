@@ -7,5 +7,4 @@ data class SearchState(
     val searchString: String = "",
     val loadedUsers: List<User> = listOf(),
     val isLoading: Boolean = false,
-    val specificUser: User = User()
 )

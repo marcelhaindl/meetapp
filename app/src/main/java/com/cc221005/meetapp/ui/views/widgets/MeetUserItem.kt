@@ -29,17 +29,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.User
+import com.cc221005.meetapp.ui.uistates.UserModel
+import com.cc221005.meetapp.ui.views.Screen
 
 @Composable
-fun MeetUserItem(user: User) {
+fun MeetUserItem(navController: NavController, user: User, userModel: UserModel) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .height(208.dp)
             .clip(shape = RoundedCornerShape(8.dp))
-            .clickable { /* TODO: onMeetUserItemClick */ }
+            .clickable {
+                userModel.updateSpecificUser(user = user)
+                navController.navigate(Screen.SpecificUser.route)
+            }
             .background(color = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Column (

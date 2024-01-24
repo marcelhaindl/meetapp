@@ -1,5 +1,6 @@
 package com.cc221005.meetapp.utils
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,19 +31,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
+fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel, eventModel: EventModel) {
     var searchString by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(
         TextFieldValue("")
     ) }
 
     val userState = userModel.userState.collectAsState()
     val searchState = searchModel.searchState.collectAsState()
+    val eventState = eventModel.eventState.collectAsState()
 
     searchModel.updateSearch(searchString = searchString.text)
 
@@ -54,8 +57,9 @@ fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
         Screen.Chat -> Text(text = "Chat")
         Screen.Profile -> Text(text = userState.value.localUser?.username.toString())
         Screen.Settings -> Text(text = "Settings")
-        Screen.SpecificUser -> Text(text = searchState.value.specificUser.username.toString())
+        Screen.SpecificUser -> Text(text = userState.value.specificUser.username.toString())
         Screen.Theme -> Text(text = "Theme")
+        Screen.SpecificEvent -> Text(text = "Event")
         Screen.Search ->
             TextField(
                 value = searchString,

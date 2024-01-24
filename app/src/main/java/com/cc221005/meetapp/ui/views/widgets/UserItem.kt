@@ -31,7 +31,7 @@ import com.cc221005.meetapp.ui.views.Screen
 import java.util.Locale
 
 @Composable
-fun UserItem(user: User, navController: NavController, searchModel: SearchModel) {
+fun UserItem(user: User, navController: NavController, userModel: UserModel) {
     Row (
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -39,7 +39,7 @@ fun UserItem(user: User, navController: NavController, searchModel: SearchModel)
             .fillMaxWidth()
             .height(56.dp)
             .clickable {
-                searchModel.updateSpecificUser(user = user)
+                userModel.updateSpecificUser(user = user)
                 navController.navigate(Screen.SpecificUser.route)
             }
             .padding(horizontal = 16.dp)

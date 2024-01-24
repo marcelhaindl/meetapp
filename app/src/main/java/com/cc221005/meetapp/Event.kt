@@ -5,6 +5,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 data class Event (
+    var id: String = "",
     var title: String = "",
     var timestamp: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now(),
     var description: String? = "",
@@ -30,6 +31,6 @@ data class Event (
             )
     }
     override fun toString(): String {
-        return "Event(title=$title, timestamp=$timestamp, description=$description, cost=$cost, maxAttendees=$attendees, hostedBy=$hostedBy, attendees=$attendees, visitedBy=$visitedBy, tags?$tags}"
+        return "Event(title=$title, timestamp=$timestamp, description=$description, cost=$cost, maxAttendees=$attendees, hostedBy=$hostedBy, attendees=$attendees, visitedBy=$visitedBy, tags=$tags}"
     }
 }

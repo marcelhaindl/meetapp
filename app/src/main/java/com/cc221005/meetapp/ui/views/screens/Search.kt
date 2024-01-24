@@ -32,7 +32,7 @@ import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.UserItem
 import com.google.firebase.firestore.FirebaseFirestore
 @Composable
-fun Search(searchModel: SearchModel, navController: NavController) {
+fun Search(searchModel: SearchModel, navController: NavController, userModel: UserModel) {
     val searchState = searchModel.searchState.collectAsState()
    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,7 +53,7 @@ fun Search(searchModel: SearchModel, navController: NavController) {
                    Spacer(modifier = Modifier.height(16.dp))
                }
                items(searchState.value.loadedUsers) { user ->
-                   UserItem(user = user, navController = navController, searchModel = searchModel)
+                   UserItem(user = user, navController = navController, userModel = userModel)
                    Spacer(modifier = Modifier.height(8.dp))
                }
            } else {

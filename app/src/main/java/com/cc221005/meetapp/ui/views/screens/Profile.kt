@@ -74,8 +74,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.SmallEventItem
 import com.google.firebase.components.Lazy
@@ -83,7 +85,7 @@ import com.google.firebase.components.Lazy
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Profile(userModel: UserModel) {
+fun Profile(userModel: UserModel, navController: NavController, eventModel: EventModel) {
     val userState = userModel.userState.collectAsState()
     val localUser = userState.value.localUser
 
@@ -257,7 +259,7 @@ fun Profile(userModel: UserModel) {
                     else -> mutableListOf()
                 }
                 items(eventList) { event ->
-                    SmallEventItem(event = event)
+                    SmallEventItem(navController = navController, event = event, eventModel = eventModel)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
         }

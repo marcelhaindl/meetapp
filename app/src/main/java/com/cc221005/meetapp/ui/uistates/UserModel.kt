@@ -7,11 +7,13 @@ import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.User
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.CompletableFuture
 
 class UserModel(private val db: FirebaseFirestore) : ViewModel() {
     private val _userState = MutableStateFlow(UserState())
@@ -21,6 +23,29 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
         viewModelScope.launch {
             _userState.update { it.copy(email = email) }
             _userState.update { it.copy(password = password) }
+        }
+    }
+
+    fun getUserById(uid: String, callback: (User?) -> Unit) {
+        db.collection("users").document(uid)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val snapshot = task.result
+                    val user = snapshot?.toObject(User::class.java)
+                    Log.e("success", user?.username.toString())
+                    callback(user)
+                } else {
+                    Log.e("failure", "Error getting user by ID", task.exception)
+                    callback(null)
+                }
+            }
+    }
+
+
+    fun updateSpecificUser(user: User) {
+        viewModelScope.launch {
+            _userState.update { it.copy(specificUser = user) }
         }
     }
 

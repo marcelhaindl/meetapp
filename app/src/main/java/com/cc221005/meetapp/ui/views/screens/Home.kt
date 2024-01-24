@@ -51,8 +51,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.HeadlineWithSubtextAndArrow
 import com.cc221005.meetapp.ui.views.widgets.LargeEventItem
@@ -60,7 +62,7 @@ import com.cc221005.meetapp.ui.views.widgets.MeetUserItem
 import java.util.Locale
 
 @Composable
-fun Home(userModel: UserModel) {
+fun Home(navController: NavController, userModel: UserModel, eventModel: EventModel) {
     val userState = userModel.userState.collectAsState()
 
     // Get recommended events for the user
@@ -91,7 +93,7 @@ fun Home(userModel: UserModel) {
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 items(userState.value.recommendedEvents!!) { event ->
-                    LargeEventItem(event = event)
+                    LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
@@ -110,7 +112,7 @@ fun Home(userModel: UserModel) {
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 items(userState.value.topEventsNextWeek!!) { event ->
-                    LargeEventItem(event = event)
+                    LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
@@ -128,7 +130,7 @@ fun Home(userModel: UserModel) {
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 items(userState.value.peopleWithSameInterests!!) { user ->
-                    MeetUserItem(user = user)
+                    MeetUserItem(navController = navController, user = user, userModel = userModel)
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
@@ -155,7 +157,7 @@ fun Home(userModel: UserModel) {
                     modifier = Modifier.padding(start = 16.dp)
                 ) {
                     items(it.value!!) { event ->
-                        LargeEventItem(event = event)
+                        LargeEventItem(navController = navController, event = event, eventModel = eventModel)
                         Spacer(modifier = Modifier.width(16.dp))
                     }
                 }

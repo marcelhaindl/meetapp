@@ -1,5 +1,6 @@
 package com.cc221005.meetapp.ui.views.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,8 @@ import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.MyDatePicker
+import com.google.firebase.Timestamp
+import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +66,15 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: 
     var description by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.description ?: "")) }
     var cost by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.cost.toString() ?: "")) }
     var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.maxAttendees.toString() ?: "")) }
+
+    if(eventState.value.deleteAddEventFlag) {
+        title = TextFieldValue("")
+        description = TextFieldValue("")
+        cost = TextFieldValue(0.0.toString())
+        maxAttendees = TextFieldValue(0.toString())
+        eventModel.updateAddEventDate(Timestamp.now())
+        eventModel.setDeleteAddEventFlag(false)
+    }
 
     eventModel.updateAddEvent(
         Event(

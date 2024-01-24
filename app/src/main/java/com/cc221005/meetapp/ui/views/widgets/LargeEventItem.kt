@@ -6,12 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -31,8 +33,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
+import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
 import com.example.compose.md_theme_dark_onSurface
 import com.example.compose.md_theme_dark_onSurfaceVariant
@@ -40,7 +45,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun LargeEventItem(event: Event) {
+fun LargeEventItem(navController: NavController, event: Event, eventModel: EventModel) {
     val date = convertTimestampToFormattedDate(event.timestamp)
 
     Box(
@@ -48,7 +53,10 @@ fun LargeEventItem(event: Event) {
             .width(330.dp)
             .height(240.dp)
             .clip(shape = RoundedCornerShape(8.dp))
-            .clickable { /* TODO: onLargeEventItemClick */ }
+            .clickable {
+                eventModel.setSpecificEventTo(event)
+                navController.navigate(Screen.SpecificEvent.route)
+            }
     ) {
         // Image background
         Image(
@@ -71,8 +79,10 @@ fun LargeEventItem(event: Event) {
             Column (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-                horizontalAlignment = Alignment.Start,
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
+                    .height(80.dp), // Set a fixed height
+
+            horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
@@ -91,7 +101,8 @@ fun LargeEventItem(event: Event) {
                     color = md_theme_dark_onSurface,
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
                 )
             }
         }
