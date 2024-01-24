@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,19 +45,35 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
+import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.MyDatePicker
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Create(navigationModel: NavigationModel, eventModel: EventModel) {
+fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: UserModel) {
 
-    var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-    var description by remember { mutableStateOf(TextFieldValue("")) }
-    var cost by remember { mutableStateOf(TextFieldValue("")) }
-    var attendees by remember { mutableStateOf(TextFieldValue("")) }
+    val eventState = eventModel.eventState.collectAsState()
+    val userState = userModel.userState.collectAsState()
+
+    var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(eventState.value.addEvent.title ?: "")) }
+    var description by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.description ?: "")) }
+    var cost by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.cost.toString() ?: "")) }
+    var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.maxAttendees.toString() ?: "")) }
+
+    eventModel.updateAddEvent(
+        Event(
+            title = title.text,
+            description = description.text,
+            cost = cost.text.takeIf { it.isNotBlank() }?.toDoubleOrNull() ?: 0.0,
+            maxAttendees = maxAttendees.text.takeIf { it.isNotBlank() }?.toIntOrNull() ?: 0,
+            hostedBy = userState.value.localUser?.uid.toString()
+        )
+    )
+
 
     Column (
         verticalArrangement = Arrangement.Top,
@@ -101,7 +118,6 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel) {
         MyDatePicker(
             label = stringResource(id = R.string.date),
             eventModel = eventModel,
-            navigationModel = navigationModel,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -135,8 +151,8 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel) {
                 value = cost,
                 singleLine = true,
 
-                onValueChange = { newText ->
-                    cost = newText
+                onValueChange = { newValue ->
+                    cost = newValue
                 },
                 label = { Text(text = stringResource(R.string.cost)) },
                 leadingIcon = {
@@ -152,11 +168,11 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel) {
 
             TextField(
                 modifier = Modifier.weight(1f),
-                value = attendees,
+                value = maxAttendees,
                 singleLine = true,
 
-                onValueChange = { newText ->
-                    attendees = newText
+                onValueChange = { newValue ->
+                    maxAttendees = newValue
                 },
 
                 label = { Text(text = stringResource(R.string.max_attend)) },

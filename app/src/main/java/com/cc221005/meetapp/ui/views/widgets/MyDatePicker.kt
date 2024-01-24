@@ -17,11 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
+import com.cc221005.meetapp.utils.convertLocalDateTimeToTimestamp
+import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
+import com.cc221005.meetapp.utils.convertTimestampToLocalDateTime
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 
 /**
  * # MyDatePicker
@@ -38,33 +44,29 @@ import java.time.format.DateTimeFormatter
 fun MyDatePicker(
     label: String,
     eventModel: EventModel,
-    navigationModel: NavigationModel,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    pattern: String = "dd/MM/yyyy",
     modifier: Modifier,
 ) {
-    // Navigation State
-    val navState = navigationModel.navigationState.collectAsState()
-
     // Set the event state date depending on whether the selected screen is the AddEvent or the
     // EditEvent Screen
-    val eventDate = eventModel.eventState.collectAsState().value.date
+    val eventState = eventModel.eventState.collectAsState()
 
-    // Formatter to format the date to a specific pattern
-    val formatter = DateTimeFormatter.ofPattern(pattern)
+    val eventTimestamp = eventState.value.addEvent.timestamp
+    val eventDateString = convertTimestampToFormattedDate(eventState.value.addEvent.timestamp)
 
     // Date Picker Dialog
     val dialog = DatePickerDialog(
         LocalContext.current,
         { _, year, month, dayOfMonth ->
-            eventModel.updateDate(
-                date = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0, 0)
+            val localDateTime = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0, 0)
+            eventModel.updateAddEventDate(
+                convertLocalDateTimeToTimestamp(localDateTime)
             )
         },
-        eventDate.year,
-        eventDate.monthValue - 1,
-        eventDate.dayOfMonth,
+        convertTimestampToLocalDateTime(eventTimestamp).year,
+        convertTimestampToLocalDateTime(eventTimestamp).monthValue - 1,
+        convertTimestampToLocalDateTime(eventTimestamp).dayOfMonth,
     )
 
     // Disable past dates
@@ -73,7 +75,7 @@ fun MyDatePicker(
     // TextField
     TextField(
         // Value set to the date
-        value = eventDate.format(formatter),
+        value = eventDateString,
         onValueChange = {},
         // Leading Icon
         leadingIcon = {

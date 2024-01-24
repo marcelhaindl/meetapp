@@ -1,18 +1,28 @@
 package com.cc221005.meetapp.utils
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
+import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.views.Screen
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import java.util.UUID
 
 @Composable
-fun getActionIcons(screen: Screen, navController: NavController) {
+fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFirestore, eventModel: EventModel, context: Context) {
+    val eventState = eventModel.eventState.collectAsState()
     when (screen) {
             Screen.Home -> {
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
@@ -27,12 +37,34 @@ fun getActionIcons(screen: Screen, navController: NavController) {
                 // TODO: Implement search bar
             }
             Screen.Create -> {
-                IconButton(onClick = { /* TODO: Save Functionality */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.save),
-                        contentDescription = stringResource(R.string.settings),
-                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                if(eventState.value.addEvent.title.isNotEmpty() &&
+                        eventState.value.addEvent.timestamp.toString().isNotEmpty()) {
+                    IconButton(
+                        onClick = {
+                            db.collection("events").document(UUID.randomUUID().toString())
+                                .set(eventState.value.addEvent.toMap(), SetOptions.merge())
+                                .addOnSuccessListener {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.successfully_added_event),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                    // TODO: Delete data
+                                }
+                                .addOnSuccessListener {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.failed_adding_data),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                }
+                        }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.save),
+                            contentDescription = stringResource(R.string.settings),
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                     Icon(

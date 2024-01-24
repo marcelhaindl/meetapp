@@ -67,4 +67,5 @@
     <string name="no_hosted_events">No hosted events!</string>
     <string name="no_upcoming_events">No upcoming events!</string>
     <string name="no_visited_events">No visited events!</string>
+    <string name="successfully_added_event">Successfully added event!</string>
 </resources>

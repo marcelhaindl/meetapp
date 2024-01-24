@@ -62,7 +62,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                         containerColor = MaterialTheme.colorScheme.background,
                         scrolledContainerColor = MaterialTheme.colorScheme.background
                     ),
-                    actions = { getActionIcons(screen = selectedScreen, navController = navController) },
+                    actions = { getActionIcons(screen = selectedScreen, navController = navController, db = db, eventModel = eventModel, context = LocalContext.current) },
                     navigationIcon = { getNavigationIcon(screen = selectedScreen, navController = navController) }
                 )
             },
@@ -117,7 +117,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                     }
                     composable(Screen.Create.route) {
                         navigationModel.selectScreen(Screen.Create)
-                        Create(navigationModel = navigationModel, eventModel = eventModel)
+                        Create(navigationModel = navigationModel, eventModel = eventModel, userModel = userModel)
                     }
                     composable(Screen.Chat.route) {
                         navigationModel.selectScreen(Screen.Chat)
