@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
@@ -17,12 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 
+/**
+ * # Select Theme Screen
+ * This Screen contains three checkboxes to select whether you want the theme to be dark, light or system default
+ *
+ * @param navigationModel (NavigationModel) Navigation Model to interact with the navigation states
+ */
 @Composable
 fun SelectTheme(navigationModel: NavigationModel) {
     val navState = navigationModel.navigationState.collectAsState()

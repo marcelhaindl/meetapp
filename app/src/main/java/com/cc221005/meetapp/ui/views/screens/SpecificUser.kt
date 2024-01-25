@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.ui.views.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,11 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -34,29 +30,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
-import com.cc221005.meetapp.User
-import com.cc221005.meetapp.ui.uistates.EventModel
-import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
-import com.cc221005.meetapp.ui.views.widgets.SmallEventItem
 
+/**
+ * # Specific User Screen
+ * The Specific User Screen contains the profile image (colored box) as well as the name, followers and following users, biography and interests
+ *
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpecificUser(navController: NavController, userModel: UserModel, eventModel: EventModel) {
+fun SpecificUser(navController: NavController, userModel: UserModel) {
     val userState = userModel.userState.collectAsState()
+
+    // Redirects to profile screen when the specific user equals the currently logged in user
     if(userState.value.specificUser.uid == userState.value.localUser?.uid) {
         navController.navigate(Screen.Profile.route)
     }
 
+    // Creates a remember variable for the tabs (initially set to 0)
     var tabIndex by remember { mutableStateOf(0) }
 
+    // Creates the tabs
     val tabs = listOf(stringResource(R.string.hosted),
         stringResource(R.string.upcoming), stringResource(R.string.visited))
 
@@ -101,7 +102,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel, eventModel:
                 Row {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* TODO: onFollowersClick */ }
+                        modifier = Modifier.clickable {  }
                     ) {
                         Text(
                             text = userState.value.specificUser.followers?.size.toString(),
@@ -117,7 +118,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel, eventModel:
                     Spacer(modifier = Modifier.width(48.dp))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* TODO: onFollowingClick */ }
+                        modifier = Modifier.clickable {  }
                     ) {
                         Text(
                             text = userState.value.specificUser.following?.size.toString(),
@@ -155,7 +156,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel, eventModel:
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
-                    onClick = { /* TODO: Functionality to follow */ }
+                    onClick = {  }
                 ) {
                     Text(text = stringResource(R.string.follow))
                 }
@@ -194,38 +195,5 @@ fun SpecificUser(navController: NavController, userModel: UserModel, eventModel:
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
-        /*if(userState.value.hostedEvents.isNullOrEmpty()) {
-            when (tabIndex) {
-                0 -> items (1) {
-                    Text(
-                        text = stringResource(R.string.hosted_events_not_available),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                1 -> items(1) {
-                    Text(
-                        text = stringResource(R.string.upcoming_events_not_available),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                2 -> items(1) {
-                    Text(
-                        text = stringResource(R.string.visited_events_not_available),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            val eventList: MutableList<Event> = when (tabIndex) {
-                0 -> userState.value.hostedEvents!!
-                1 -> userState.value.upcomingEvents!!
-                2 -> userState.value.visitedEvents!!
-                else -> mutableListOf()
-            }
-            items(eventList) { event ->
-                SmallEventItem(navController = navController, event = event, eventModel = eventModel)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }*/
     }
 }

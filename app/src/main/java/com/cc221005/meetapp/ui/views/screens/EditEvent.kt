@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.ui.views.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,16 +14,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,39 +28,38 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
-import com.cc221005.meetapp.ui.uistates.UserModel
-import com.cc221005.meetapp.ui.uistates.UserState
 import com.cc221005.meetapp.ui.views.widgets.MyDatePicker
-import com.google.firebase.Timestamp
-import kotlin.math.max
 
+/**
+ * # Edit Event Screen
+ * The Edit Event Screen contains the default event image, as well as all the text fields to edit the event.
+ *
+ * @param eventModel (EventModel) Event Model to interact with the event states
+ * @param navigationModel (NavigationModel) Navigation Model to interact with the navigation states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditEvent(eventModel: EventModel, navigationModel: NavigationModel) {
     val eventState = eventModel.eventState.collectAsState()
 
+    // Default remember variables for text fields
     var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(eventState.value.editEvent.title ?: "")) }
     var description by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.description ?: "")) }
     var cost by remember { mutableStateOf(TextFieldValue( eventState.value.editEvent.cost.toString() ?: "")) }
     var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.maxAttendees.toString() ?: "")) }
     var tags by remember { mutableStateOf(TextFieldValue(eventState.value.editEvent.tags!!.joinToString(", ") ?: "")) }
 
-
+    // Update the editEvent whenever a value changes
     eventModel.updateEditEvent(
         Event(
             title = title.text,

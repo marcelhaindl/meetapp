@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.utils
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,17 +35,25 @@ import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 
+/**
+ * # Get Title
+ * The getTitle Composable is used to get a title depending on the current screen.
+ *
+ * @param screen (Screen) Current Screen
+ * @param searchModel (SearchModel) Search Model to interact with the search states
+ * @param userModel (UserModel) User Model to interact with the user states
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel, eventModel: EventModel) {
+fun getTitle(screen: Screen, searchModel: SearchModel, userModel: UserModel) {
+    // Search string for search bar
     var searchString by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(
         TextFieldValue("")
     ) }
 
     val userState = userModel.userState.collectAsState()
-    val searchState = searchModel.searchState.collectAsState()
-    val eventState = eventModel.eventState.collectAsState()
 
+    // Update search string
     searchModel.updateSearch(searchString = searchString.text)
 
     val keyboardController = LocalSoftwareKeyboardController.current

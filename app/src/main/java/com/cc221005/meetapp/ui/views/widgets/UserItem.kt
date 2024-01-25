@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.ui.views.widgets
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,15 +20,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cc221005.meetapp.User
-import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
-import java.util.Locale
 
+/**
+ * # User Item
+ * The User Item widget is used to show the users in a small list item representation containing the profile image (colored box),
+ * the username and the name.
+ *
+ * @param user (User) User to be displayed
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @Composable
 fun UserItem(user: User, navController: NavController, userModel: UserModel) {
     Row (
@@ -62,7 +67,6 @@ fun UserItem(user: User, navController: NavController, userModel: UserModel) {
         }
         Spacer(modifier = Modifier.width(16.dp))
 
-        // Column with username and name
         Column (
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center,

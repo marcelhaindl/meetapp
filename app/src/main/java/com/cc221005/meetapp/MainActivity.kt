@@ -1,9 +1,7 @@
 package com.cc221005.meetapp
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -14,19 +12,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.rememberNavController
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.views.Navigation
-import com.example.compose.MeetappTheme
+import com.cc221005.meetapp.ui.theme.MeetappTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
+/**
+ * # Main Activity
+ * Main Entry point of the app. Here all the initial models and database are initialized.
+ * Also is the onCreate and onStart method which get triggered when the app is created for the first time or started.
+ */
 class MainActivity : ComponentActivity() {
     private val db = Firebase.firestore
     private lateinit var auth: FirebaseAuth
@@ -45,9 +46,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in and if data is already saved
+        // Check if user is signed in
         if(auth.currentUser != null) {
-
+            // Load the user from the database and save it inside the local user variable
             db.collection("users").document(auth.currentUser!!.uid).get()
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
@@ -70,7 +71,6 @@ class MainActivity : ComponentActivity() {
                         userModel.setLocalUserTo(user)
                     } else {
                         userModel.setLocalUserTo(null)
-                        Log.e("Error", "Error while initially saving user")
                     }
 
                 }
@@ -88,14 +88,20 @@ class MainActivity : ComponentActivity() {
                     else -> isSystemInDarkTheme()
                 }
             ) {
-                // A surface container using the 'background' color from the theme
                 window.statusBarColor = MaterialTheme.colorScheme.surface.toArgb()
                 window.navigationBarColor = MaterialTheme.colorScheme.surface.toArgb()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(navigationModel = navigationModel, userModel = userModel, auth = auth, db = db, searchModel = searchModel, eventModel = eventModel)
+                    Navigation(
+                        navigationModel = navigationModel,
+                        userModel = userModel,
+                        auth = auth,
+                        db = db,
+                        searchModel = searchModel,
+                        eventModel = eventModel
+                    )
                 }
             }
         }

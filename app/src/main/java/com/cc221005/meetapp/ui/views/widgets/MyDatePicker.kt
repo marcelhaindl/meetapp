@@ -33,13 +33,12 @@ import java.util.Date
 /**
  * # MyDatePicker
  * Date picker for picking a date when editing or adding an event
- * @param label Label of the Text Field
- * @param eventModel Instance of the EventModel
- * @param navigationModel Instance of the NavigationModel
- * @param keyboardActions Keyboard actions (Set to default)
- * @param keyboardOptions Keyboard options (Set to default)
- * @param pattern Pattern of how the date should be displayed
- * @param modifier Modifier of the date picker
+ * @param label (String) Label of the Text Field
+ * @param eventModel (EventModel) Event Model to interact with event states
+ * @param navigationModel (NavigationModel) Navigation Model to interact with navigation states
+ * @param keyboardActions (KeyboardActions) Keyboard actions (Set to default)
+ * @param keyboardOptions (KeyboardOptions) Keyboard options (Set to default)
+ * @param modifier (Modifier) Modifier of the date picker
  */
 @Composable
 fun MyDatePicker(
@@ -81,7 +80,6 @@ fun MyDatePicker(
     // Disable past dates
     dialog.datePicker.minDate = System.currentTimeMillis() - 1000
 
-    // TextField
     TextField(
         // Value set to the date
         value = eventDateString,

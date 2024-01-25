@@ -1,5 +1,9 @@
 package com.cc221005.meetapp.ui.views
 
+/**
+ * # Screen
+ * Sealed class containing all the screen objects
+ */
 sealed class Screen(val route: String){
     object Home: Screen("home")
     object Search: Screen("search")

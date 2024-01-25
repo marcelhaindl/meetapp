@@ -2,6 +2,19 @@ package com.cc221005.meetapp
 
 import com.google.firebase.firestore.Exclude
 
+/**
+ * # User Class
+ * User is a data class (blueprint) representing user information.
+ *
+ * @param uid (String) The unique identifier for the user. Nullable.
+ * @param email (String) The email address of the user. Nullable.
+ * @param username (String) The username chosen by the user. Nullable.
+ * @param name (String) The name of the user. Nullable.
+ * @param interests (MutableList<String>) List of interests associated with the user. Initialized as an empty mutable list.
+ * @param followers (MutableList<String>) List of user IDs who follow the user. Initialized as an empty mutable list.
+ * @param following (MutableList<String>) List of user IDs whom the user follows. Initialized as an empty mutable list.
+ * @param biography (String) A brief biography or description provided by the user. Nullable.
+ */
 data class User(
     var uid: String? = "",
     var email: String? = "",

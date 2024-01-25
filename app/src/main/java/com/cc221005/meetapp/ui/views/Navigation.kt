@@ -1,7 +1,6 @@
 package com.cc221005.meetapp.ui.views
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
@@ -47,14 +45,33 @@ import com.cc221005.meetapp.utils.getActionIcons
 import com.cc221005.meetapp.utils.getBottomBar
 import com.cc221005.meetapp.utils.getNavigationIcon
 import com.cc221005.meetapp.utils.getTitle
-import com.cc221005.meetapp.utils.getTrailingButtonFunction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
+/**
+ * # Navigation
+ * The Navigation contains all the main navigation parts like Scaffold with TopAppBar, BottomNavigationBar, Title, ...
+ * Depending on whether the user is logged in or not, the navigation decides on which screen to navigate.
+ * If the user is logged in, it gets navigated to the home screen, whereas if the user is logged out, it gets navigated to the
+ * onboarding screens.
+ *
+ * @param navigationModel (NavigationModel) Navigation Model to interact with navigation states
+ * @param userModel (UserModel) User Model to interact with user states
+ * @param auth (FirebaseAuth) Firebase authentication to interact with the authenticated user
+ * @param db (FirebaseFirestore) Firebase Firestore database to interact with the database
+ * @param searchModel (SearchModel) Search Model to interact with the search states
+ * @param eventModel (EventModel) Event Model to interact with the event states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: FirebaseAuth, db: FirebaseFirestore, searchModel: SearchModel, eventModel: EventModel) {
+fun Navigation(
+    navigationModel: NavigationModel,
+    userModel: UserModel,
+    auth: FirebaseAuth,
+    db: FirebaseFirestore,
+    searchModel: SearchModel,
+    eventModel: EventModel
+) {
     val navState = navigationModel.navigationState.collectAsState()
     val userState = userModel.userState.collectAsState()
     val eventState = eventModel.eventState.collectAsState()
@@ -71,7 +88,6 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
                         screen = selectedScreen,
                         searchModel = searchModel,
                         userModel = userModel,
-                        eventModel = eventModel
                     )
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -192,7 +208,7 @@ fun Navigation(navigationModel: NavigationModel, userModel: UserModel, auth: Fir
             }
             composable(Screen.SpecificUser.route) {
                 navigationModel.selectScreen(Screen.SpecificUser)
-                SpecificUser(navController = navController, userModel = userModel, eventModel = eventModel)
+                SpecificUser(navController = navController, userModel = userModel)
             }
             composable(Screen.SpecificEvent.route) {
                 navigationModel.selectScreen(Screen.SpecificEvent)

@@ -27,9 +27,16 @@ import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
-import java.time.format.TextStyle
-import java.util.Locale
 
+/**
+ * # Small Event Item
+ * The Small Event Item Widget is used to show the event in a smaller representation but still contains the event image (default),
+ * the event title, date and description.
+ *
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param event (Event) Event to be displayed
+ * @param eventModel (EventModel) Event Model to interact with event states
+ */
 @Composable
 fun SmallEventItem(navController: NavController, event: Event, eventModel: EventModel) {
     val date = convertTimestampToFormattedDate(event.timestamp)

@@ -1,4 +1,4 @@
-package com.cc221005.eventsapp.ui.views.widgets
+package com.cc221005.meetapp.ui.views.widgets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -30,9 +30,9 @@ import com.cc221005.meetapp.R
 /**
  * # SettingsItem
  * Item for showing a setting to select.
- * @param icon Icon composable, shown on the left side of the item
- * @param title Title of the settings item, shown on the right side of the item
- * @param onClick onClick-Function when the item is clicked
+ * @param icon (Any) Icon composable, shown on the left side of the item
+ * @param title (String) Title of the settings item, shown on the right side of the item
+ * @param onClick (() -> Unit) onClick method when the item is clicked
  */
 @Composable
 fun SettingsItem(

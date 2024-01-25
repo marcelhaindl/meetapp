@@ -1,47 +1,24 @@
 package com.cc221005.meetapp.ui.views.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -55,33 +32,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope.Companion.DefaultBlendMode
-import androidx.compose.ui.input.key.Key.Companion.Tab
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineBreak
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.SmallEventItem
-import com.google.firebase.components.Lazy
 
+/**
+ * # Profile Screen
+ * The Profile Screen contains the profile image (colored box) as well as the name, the followers and following users, the biography, the interests and all
+ * the hosted, upcoming and visited events of the user
+ *
+ * @param userModel (UserModel) User Model to interact with the user states
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param eventModel (EventModel) Event Model to interact with the event states
+ */
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -89,8 +57,10 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
     val userState = userModel.userState.collectAsState()
     val localUser = userState.value.localUser
 
+    // Create a remember variable (initially set to 0)
     var tabIndex by remember { mutableStateOf(0) }
 
+    // Create the tab strings
     val tabs = listOf(stringResource(R.string.hosted),
         stringResource(R.string.upcoming), stringResource(R.string.visited))
 
@@ -137,7 +107,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                 Row {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* TODO: onFollowersClick */ }
+                        modifier = Modifier.clickable {  }
                     ) {
                         Text(
                             text = localUser?.followers?.size.toString(),
@@ -153,7 +123,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     Spacer(modifier = Modifier.width(48.dp))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* TODO: onFollowingClick */ }
+                        modifier = Modifier.clickable {  }
                     ) {
                         Text(
                             text = localUser?.following?.size.toString(),
@@ -190,7 +160,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
-                    onClick = { /*TODO: Edit Profile*/ }
+                    onClick = {  }
                 ) {
                     Text(text = stringResource(R.string.edit_profile))
                 }

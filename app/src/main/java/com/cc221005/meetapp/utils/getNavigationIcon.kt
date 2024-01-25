@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.utils
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -13,8 +12,20 @@ import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.views.Screen
 
+/**
+ * # Get Navigation Icons
+ * The getNavigationIcons Composable is used to get the navigation icons depending on the current screen.
+ *
+ * @param navigationModel (NavigationModel) NavigationModel to interact with navigation states
+ * @param screen (Screen) Current screen
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ */
 @Composable
-fun getNavigationIcon(navigationModel: NavigationModel, screen: Screen, navController: NavController) {
+fun getNavigationIcon(
+    navigationModel: NavigationModel,
+    screen: Screen,
+    navController: NavController
+) {
     if (screen != Screen.Home &&
         screen != Screen.Search &&
         screen != Screen.Create &&

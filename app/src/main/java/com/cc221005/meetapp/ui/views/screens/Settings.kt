@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
@@ -22,12 +18,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.cc221005.eventsapp.ui.views.widgets.SettingsItem
+import com.cc221005.meetapp.ui.views.widgets.SettingsItem
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * # Settings Screen
+ * The Settings Screen contains a number of buttons like privacy, security, theme, about, etc.
+ * By now, only the theme button is implemented.
+ * Also on the very bottom of the screen, there is the log out button to log out the user.
+ *
+ * @param auth (FirebaseAuth) to log out the user
+ * @param userModel (UserModel) User Model to interact with user states
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ */
 @Composable
 fun Settings(auth: FirebaseAuth, userModel: UserModel, navController: NavController) {
     Column (

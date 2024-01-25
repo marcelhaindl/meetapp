@@ -3,6 +3,10 @@ package com.cc221005.meetapp.ui.uistates
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.User
 
+/**
+ * # User State
+ * The User State is a data class (blueprint) containing the variables to interact with the user states
+ */
 data class UserState(
     val email: String = "",
     val password: String = "",

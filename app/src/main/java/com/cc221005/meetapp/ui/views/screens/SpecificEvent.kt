@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.ui.views.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,22 +31,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
-import com.cc221005.meetapp.User
 import com.cc221005.meetapp.ui.uistates.EventModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.utils.convertTimestampToFormattedDate
 
+/**
+ * # Specific Event Screen
+ * The Specific Event Screen displays the default event image, as well as the cost, attendees, title, host, tags, and description.
+ *
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ * @param eventModel (EventModel) Event Model to interact with event states
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpecificEvent(navController: NavController, eventModel: EventModel, userModel: UserModel) {
     val eventState = eventModel.eventState.collectAsState()
     val userState = userModel.userState.collectAsState()
 
+    // Get the host user
     userModel.getUserById(eventState.value.specificEvent.hostedBy.toString()) { user ->
         eventModel.setHostedEventUser(user = user!!, uid = eventState.value.specificEvent.hostedBy.toString())
     }
-
 
     Column (
         verticalArrangement = Arrangement.Top,
@@ -128,12 +134,8 @@ fun SpecificEvent(navController: NavController, eventModel: EventModel, userMode
 
         }
 
-
         Spacer(modifier = Modifier.height(24.dp))
-
         Text(text = eventState.value.specificEvent.description.toString())
-
         Spacer(modifier = Modifier.height(24.dp))
-
     }
 }

@@ -1,9 +1,22 @@
 package com.cc221005.meetapp
 
 import com.google.firebase.firestore.Exclude
-import java.sql.Timestamp
-import java.time.LocalDateTime
 
+/**
+ * # Event Class
+ * Event is a data class (blueprint) containing all variables and functions needed to interact with an event.
+ *
+ * @param id (String) The unique identifier for the event.
+ * @param title (String) The title or name of the event.
+ * @param timestamp (Timestamp) The Firebase timestamp. Default is the current timestamp.
+ * @param description (String) A brief description or details about the event. Nullable.
+ * @param cost (Double) The cost associated with attending the event. Nullable, default is 0.0.
+ * @param maxAttendees (Int) The maximum number of attendees allowed for the event. Nullable, default is 0.
+ * @param hostedBy (String) The organizer or entity hosting the event. Nullable.
+ * @param attendees (MutableList<String>) List of user IDs who are attending the event. Initialized as an empty mutable list
+ * @param visitedBy (MutableList<String>) List of user IDs who have visited or interacted with the event. Initialized as an empty mutable list
+ * @param tags (MutableList<String>) List of tags associated with the event. Initialized as an empty mutable list
+ */
 data class Event (
     var id: String = "",
     var title: String = "",

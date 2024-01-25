@@ -14,6 +14,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cc221005.meetapp.ui.views.Screen
 
+/**
+ * # Onboarding Pagination
+ * The Onboarding Pagination Widget is used to show the pagination circles (6) and on which screen the user currently is.
+ *
+ * @param selectedScreen (Screen) Currently selected screen
+ */
 @Composable
 fun OnboardingPagination(selectedScreen: Screen) {
     val selectedModifier = Modifier

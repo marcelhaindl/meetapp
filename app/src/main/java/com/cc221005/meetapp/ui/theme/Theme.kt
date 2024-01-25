@@ -1,13 +1,15 @@
-package com.example.compose
+package com.cc221005.meetapp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-
+/**
+ * # Light Color Scheme
+ * Light color scheme representing all the light colors from Material 3 Design
+ */
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
@@ -40,7 +42,10 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
+/**
+ * # Dark Color Scheme
+ * Dark color scheme representing all the dark colors from Material 3 Design
+ */
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -73,6 +78,11 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+/**
+ * # MeetappTheme
+ * App Theme of MeetApp.
+ * Checks the systems theme and represents the light or the dark theme depending on the systems theme
+ */
 @Composable
 fun MeetappTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),

@@ -7,18 +7,30 @@ import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.User
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.CompletableFuture
 
+/**
+ * # User Model
+ * The User Model is used to interact with states relating to users.
+ *
+ * @param db (FirebaseFirestore) Firebase database variable to interact with the database
+ */
 class UserModel(private val db: FirebaseFirestore) : ViewModel() {
     private val _userState = MutableStateFlow(UserState())
     val userState: StateFlow<UserState> = _userState.asStateFlow()
 
+    /**
+     * # Update Email and Password
+     * Updates the email and the password variable when the user is interacting with the sign up or login
+     * on the onboarding screens.
+     *
+     * @param email (String) Email-Address
+     * @param password (String) Password
+     */
     fun updateEmailAndPassword(email: String, password: String) {
         viewModelScope.launch {
             _userState.update { it.copy(email = email) }
@@ -26,6 +38,59 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
         }
     }
 
+    /**
+     * # Update Username and Name
+     * Updates the username and the name when the user is interacting with the onboarding flow screens.
+     *
+     * @param username (String) Username
+     * @param name (String) Full Name
+     */
+    fun updateUsernameAndName(username: String, name: String) {
+        viewModelScope.launch {
+            _userState.update { it.copy(onboardingUsername = username) }
+            _userState.update { it.copy(onboardingName = name) }
+        }
+    }
+
+    /**
+     * # Add Interest Item
+     * Adds an interest item whenever the user clicks on a not-selected chip at the onboarding flow
+     *
+     * @param interest (String) Interest string of the not-selected chip
+     */
+    fun addInterestItem(interest: String) {
+        viewModelScope.launch {
+            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
+                add(interest.lowercase())
+            }
+            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
+        }
+    }
+
+    /**
+     * # Remove Interest Item
+     * Removes an interest item whenever the user clicks on a selected chip at the onboarding flow
+     *
+     * @param interest (String) Interest String of the selected chip
+     */
+    fun removeInterestItem(interest: String) {
+        viewModelScope.launch {
+            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
+                remove(interest.lowercase())
+            }
+            Log.e("Interest", updatedInterests.toString())
+
+            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
+        }
+    }
+
+    /**
+     * # Get User by ID
+     * Gets the user with the [uid] from the database and uses the [callback] method to interact with the user.
+     *
+     * @param uid (String) UID of the user
+     * @param callback ((User?) -> Unit) Callback method to interact with the user.
+     */
     fun getUserById(uid: String, callback: (User?) -> Unit) {
         db.collection("users").document(uid)
             .get()
@@ -40,6 +105,12 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
             }
     }
 
+    /**
+     * # Get First 5 Users
+     * Gets the first 5 users from the database. If the task is successful, the users are saved into the local variable
+     * in order to interact with it on the screens. Also, the currently logged in user is removed from the array to avoid
+     * that the user sees itself in the recommended list.
+     */
     fun getFirst5Users() {
         db.collection("users")
             .limit(5)
@@ -55,18 +126,28 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(first5Users = users) }
                 }
             }
-            .addOnFailureListener {
-                Log.e("Error", "Failed loading first 5 users $it")
-            }
     }
 
 
+    /**
+     * # Update Specific User
+     * Updates the specific user to [user].
+     *
+     * @param user (User) User to update to
+     */
     fun updateSpecificUser(user: User) {
         viewModelScope.launch {
             _userState.update { it.copy(specificUser = user) }
         }
     }
 
+    /**
+     * # Set Local User
+     * Sets the local user to [user]. Only the parameters that are set inside the [user] variable are actually saved to localUser.
+     * If the parameters are null or empty, the previously saved value is remained.
+     *
+     * @param user (User) User to update the local user to
+     */
     fun setLocalUserTo(user: User?) {
         viewModelScope.launch {
             _userState.update { currentState ->
@@ -92,8 +173,10 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
         }
     }
 
-
-
+    /**
+     * # Get Recommended Events
+     * Gets a number of recommended events depending on the interests of the user and the tags of the event.
+     */
     fun getRecommendedEvents() {
         val userInterests = _userState.value.localUser?.interests ?: mutableListOf()
 
@@ -111,11 +194,12 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(recommendedEvents = recommendedEvents) }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading recommended events $exception")
-            }
     }
 
+    /**
+     * # Get Top Events Next Week
+     * Gets Events which date is within the range of one week.
+     */
     fun getTopEventsNextWeek() {
         val currentTime = Timestamp.now()
         val oneWeekInMillis = 7 * 24 * 60 * 60 * 1000 // 1 week in milliseconds
@@ -136,11 +220,13 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(topEventsNextWeek = topEventsNextWeek) }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading top events next week $exception")
-            }
     }
 
+    /**
+     * # Get Events for each interest
+     * For each interest a user has, this function searches for events that contain this interest as tags in order
+     * to display very specific events like "technology events" or "cars events"
+     */
     fun getEventsForEachInterest() {
         _userState.value.localUser?.interests?.forEach { interest ->
             db.collection("events")
@@ -165,6 +251,10 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
         }
     }
 
+    /**
+     * # Get people with same interests
+     * Gets users which have similar interests as the currently logged in user.
+     */
     fun getPeopleWithSameInterests() {
         val userInterests = _userState.value.localUser?.interests ?: mutableListOf()
 
@@ -184,11 +274,14 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(peopleWithSameInterests = peopleWithSameInterests) }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading people with same interests $exception")
-            }
     }
 
+    /**
+     * # Get Events from user id
+     * Gets all the events where the user with the [uid] is named as a 1. host, 2. attendee or 3. visitor.
+     *
+     * @param uid (String) UID of the user
+     */
     fun getEventsFromUserId(uid: String) {
         db.collection("events")
             .whereEqualTo("hostedBy", uid)
@@ -201,9 +294,6 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                 viewModelScope.launch {
                     _userState.update { it.copy(hostedEvents = hostedEvents) }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading hosted events $exception")
             }
 
         db.collection("events")
@@ -218,9 +308,6 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(upcomingEvents = upcomingEvents) }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading upcoming events $exception")
-            }
 
         db.collection("events")
             .whereArrayContains("visitedBy", uid)
@@ -234,39 +321,14 @@ class UserModel(private val db: FirebaseFirestore) : ViewModel() {
                     _userState.update { it.copy(visitedEvents = visitedEvents) }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("Error", "Failed loading visited events $exception")
-            }
     }
 
-    fun updateUsernameAndName(username: String, name: String) {
-        viewModelScope.launch {
-            _userState.update { it.copy(onboardingUsername = username) }
-            _userState.update { it.copy(onboardingName = name) }
-        }
-    }
-
-    fun addInterestItem(interest: String) {
-        viewModelScope.launch {
-            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
-                add(interest.lowercase())
-            }
-            Log.e("Interest", updatedInterests.toString())
-            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
-        }
-    }
-
-    fun removeInterestItem(interest: String) {
-        viewModelScope.launch {
-            val updatedInterests = _userState.value.onboardingInterestList.toMutableList().apply {
-                remove(interest.lowercase())
-            }
-            Log.e("Interest", updatedInterests.toString())
-
-            _userState.value = _userState.value.copy(onboardingInterestList = updatedInterests)
-        }
-    }
-
+    /**
+     * # Save current user
+     * Gets the user with the [uid] from the database, and saves it as local user.
+     *
+     * @param uid (String) UID of the user
+     */
     fun saveCurrentUser(uid: String) {
         db.collection("users")
             .document(uid)

@@ -1,36 +1,34 @@
 package com.cc221005.meetapp.ui.views.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cc221005.meetapp.R
-import com.cc221005.meetapp.User
 import com.cc221005.meetapp.ui.uistates.SearchModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.UserItem
-import com.google.firebase.firestore.FirebaseFirestore
+
+/**
+ * # Search Screen
+ * The Search Screen contains all the found users depending on the inputted search string of the search bar.
+ *
+ * @param searchModel (SearchModel) Search Model to interact with search states
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @Composable
 fun Search(searchModel: SearchModel, navController: NavController, userModel: UserModel) {
     val searchState = searchModel.searchState.collectAsState()

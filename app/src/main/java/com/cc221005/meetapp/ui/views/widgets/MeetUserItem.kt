@@ -1,8 +1,6 @@
 package com.cc221005.meetapp.ui.views.widgets
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,17 +22,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.cc221005.meetapp.R
 import com.cc221005.meetapp.User
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.Screen
 
+/**
+ * # Meet User Item
+ * The Meet User Item Widget is used to display users with similar interests and contains a profile image (colored box)
+ * the username and some interests of the user.
+ *
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param user (User) User to be displayed
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @Composable
 fun MeetUserItem(navController: NavController, user: User, userModel: UserModel) {
     Box(

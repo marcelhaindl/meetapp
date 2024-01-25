@@ -2,8 +2,6 @@ package com.cc221005.meetapp.utils
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.BottomNavigationBar
@@ -11,9 +9,19 @@ import com.cc221005.meetapp.ui.views.Screen
 import com.cc221005.meetapp.ui.views.widgets.OnboardingButtons
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 
 
+/**
+ * # Get Bottom Bar
+ * The getBottomBar Composable is used to get the bottom bar depending on the current screen.
+ *
+ * @param selectedScreen (Screen) Selected Screen
+ * @param navController (NavController) Navigation controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ * @param auth (FirebaseAuth) Firebase authentication
+ * @param context (Context)
+ * @param db (FirebaseFirestore) Firebase Firestore database to interact with the database
+ */
 @Composable
 fun getBottomBar(
     selectedScreen: Screen,
@@ -23,44 +31,35 @@ fun getBottomBar(
     context: Context,
     db: FirebaseFirestore
 ) {
-
-    // While onboarding, show onboarding buttons
-    if (selectedScreen == Screen.OnboardingFlow1 ||
-        selectedScreen == Screen.OnboardingFlow2 ||
-        selectedScreen == Screen.OnboardingFlow3 ||
-        selectedScreen == Screen.OnboardingFlow3Login ||
-        selectedScreen == Screen.OnboardingFlow4 ||
-        selectedScreen == Screen.OnboardingFlow5 ||
-        selectedScreen == Screen.OnboardingFlow6) {
-        OnboardingButtons(
-            showLeadingButton = selectedScreen != Screen.OnboardingFlow1 && selectedScreen != Screen.OnboardingFlow4,
-            navController = navController,
-            onTrailingButtonClicked = getTrailingButtonFunction(
+    when (selectedScreen) {
+        Screen.OnboardingFlow1, Screen.OnboardingFlow2, Screen.OnboardingFlow3, Screen.OnboardingFlow3Login, Screen.OnboardingFlow4, Screen.OnboardingFlow5, Screen.OnboardingFlow6 -> {
+            OnboardingButtons(
+                showLeadingButton = selectedScreen != Screen.OnboardingFlow1 && selectedScreen != Screen.OnboardingFlow4,
                 navController = navController,
-                currentScreen = selectedScreen,
-                userModel = userModel,
-                auth = auth,
-                context = context,
-                db = db
-            ),
-            trailingButtonText = when (selectedScreen) {
-                Screen.OnboardingFlow3 -> "Sign up"
-                Screen.OnboardingFlow3Login -> "Login"
-                Screen.OnboardingFlow6 -> "Finish"
-                else -> "Next"
-            }
-        )
-        // If user is on main screens, show the bottom nav bar
-    } else if (selectedScreen == Screen.Home ||
-                selectedScreen == Screen.Search ||
-                selectedScreen == Screen.Create ||
-                selectedScreen == Screen.Chat ||
-                selectedScreen == Screen.Profile) {
-        BottomNavigationBar(
-            navController = navController,
-            selectedScreen = selectedScreen
-        )
-    } else {
-        // Else show nothing
+                onTrailingButtonClicked = getTrailingButtonFunction(
+                    navController = navController,
+                    currentScreen = selectedScreen,
+                    userModel = userModel,
+                    auth = auth,
+                    context = context,
+                    db = db
+                ),
+                trailingButtonText = when (selectedScreen) {
+                    Screen.OnboardingFlow3 -> "Sign up"
+                    Screen.OnboardingFlow3Login -> "Login"
+                    Screen.OnboardingFlow6 -> "Finish"
+                    else -> "Next"
+                }
+            )
+        }
+        Screen.Home, Screen.Search, Screen.Create, Screen.Chat, Screen.Profile -> {
+            BottomNavigationBar(
+                navController = navController,
+                selectedScreen = selectedScreen
+            )
+        }
+        else -> {
+            // Else show nothing
+        }
     }
 }

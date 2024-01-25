@@ -8,6 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * # Chat Screen
+ * The Chat screen is not implemented yet. In future the user will be able to chat with other users.
+ */
 @Composable
 fun Chat() {
     Column (

@@ -45,9 +45,13 @@ import androidx.navigation.NavController
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.OnboardingPagination
-import com.example.compose.md_theme_dark_surfaceContainer
-import com.example.compose.md_theme_light_surfaceContainer
+import com.cc221005.meetapp.ui.theme.md_theme_dark_surfaceContainer
+import com.cc221005.meetapp.ui.theme.md_theme_light_surfaceContainer
 
+/**
+ * # Onboarding Flow 1
+ * Greeting screen
+ */
 @Composable
 fun OnboardingFlow1() {
     Column(
@@ -87,6 +91,10 @@ fun OnboardingFlow1() {
         }
 }
 
+/**
+ * # Onboarding Flow 2
+ * Greeting screen
+ */
 @Composable
 fun OnboardingFlow2() {
     Column(
@@ -127,6 +135,14 @@ fun OnboardingFlow2() {
 
 }
 
+/**
+ * # Onboarding Flow 3
+ * The Onboarding FLow 3 Screen is used to sign up the user with email and password. That's why it contains a headline, a subtext
+ * and two text fields. Also it contains a button to switch to the login screen.
+ *
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingFlow3(navController: NavController, userModel: UserModel) {
@@ -209,6 +225,14 @@ fun OnboardingFlow3(navController: NavController, userModel: UserModel) {
         }
 }
 
+/**
+ * # Onboarding Flow 3 Login
+ * The Onboarding FLow 3 Login Screen is used to login the user with email and password. That's why it contains a headline, a subtext
+ * and two text fields. Also it contains a button to switch to the sign up screen.
+ *
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingFlow3Login(navController: NavController, userModel: UserModel) {
@@ -291,6 +315,13 @@ fun OnboardingFlow3Login(navController: NavController, userModel: UserModel) {
     }
 }
 
+/**
+ * # Onboarding Flow 4
+ * The Onboarding FLow 4 Screen is used to set the users username and name and save it to the database. That's why it contains
+ * a headline, a subtext and two text fields.
+ *
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingFlow4(userModel: UserModel) {
@@ -348,10 +379,17 @@ fun OnboardingFlow4(userModel: UserModel) {
         }
 }
 
+/**
+ * # Onboarding Flow 5
+ * The Onboarding FLow 5 Screen is used to select the users' interests using chips.
+ *
+ * @param userModel (UserModel) User Model to interact with user states
+ */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingFlow5(userModel: UserModel) {
     val userState = userModel.userState.collectAsState()
+    // Initial interest list
     val interestList: List<String> = listOf(
         "Lifestyle",
         "Make-up",
@@ -434,7 +472,10 @@ fun OnboardingFlow5(userModel: UserModel) {
 
 }
 
-
+/**
+ * # Onboarding Flow 6
+ * Used to tell the user that singing process is finished and the user can now enter the app.
+ */
 @Composable
 fun OnboardingFlow6() {
     Column(

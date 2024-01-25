@@ -1,20 +1,14 @@
 package com.cc221005.meetapp.utils
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
@@ -26,8 +20,28 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import java.util.UUID
 
+/**
+ * # Get Action Icons
+ * The getActionIcons composable is used to get the action icons for the TopAppBar depending on the current screen.
+ *
+ * @param screen (Screen) Current Screen
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param db (FirebaseFirestore) Firebase Firestore database variable to interact with database
+ * @param eventModel (EventModel) Event Model to interact with event states
+ * @param context (Context)
+ * @param userModel (UserModel) User Model to interact with user states
+ * @param navigationModel (NavigationModel) Navigation Model to interact with navigation states
+ */
 @Composable
-fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFirestore, eventModel: EventModel, context: Context, userModel: UserModel, navigationModel: NavigationModel) {
+fun getActionIcons(
+    screen: Screen,
+    navController: NavController,
+    db: FirebaseFirestore,
+    eventModel: EventModel,
+    context: Context,
+    userModel: UserModel,
+    navigationModel: NavigationModel
+) {
     val eventState = eventModel.eventState.collectAsState()
     val userState = userModel.userState.collectAsState()
     when (screen) {
@@ -72,7 +86,7 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                                     )
                                     eventModel.setDeleteAddEventFlag(true)
                                 }
-                                .addOnFailureListener() {
+                                .addOnFailureListener {
                                     Toast.makeText(
                                         context,
                                         context.getString(R.string.failed_adding_data),
@@ -96,14 +110,14 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                 }
             }
             Screen.Chat -> {
-                IconButton(onClick = { /* TODO: Search Functionality */ }) {
+                IconButton(onClick = {  }) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
                         contentDescription = stringResource(R.string.search),
                         tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                IconButton(onClick = { /* TODO: Add Chat Functionality */ }) {
+                IconButton(onClick = {  }) {
                     Icon(
                         painter = painterResource(id = R.drawable.plus),
                         contentDescription = stringResource(R.string.add_chat),
@@ -112,7 +126,7 @@ fun getActionIcons(screen: Screen, navController: NavController, db: FirebaseFir
                 }
             }
             Screen.Profile -> {
-                IconButton(onClick = { /* TODO: Wishlist */ }) {
+                IconButton(onClick = {  }) {
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
                         contentDescription = stringResource(R.string.wishlist),

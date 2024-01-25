@@ -1,6 +1,5 @@
 package com.cc221005.meetapp.ui.views.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,19 +14,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,17 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.cc221005.meetapp.Event
 import com.cc221005.meetapp.R
 import com.cc221005.meetapp.ui.uistates.EventModel
@@ -56,21 +41,29 @@ import com.cc221005.meetapp.ui.uistates.NavigationModel
 import com.cc221005.meetapp.ui.uistates.UserModel
 import com.cc221005.meetapp.ui.views.widgets.MyDatePicker
 import com.google.firebase.Timestamp
-import kotlin.math.max
 
+/**
+ * # Create Screen
+ * The Create Screen shows the default event image, as well as all the text fields to add an event.
+ *
+ * @param navigationModel (NavigationModel) Navigation Model used to interact with navigation states
+ * @param eventModel (EventModel) Event Model used to interact with event states
+ * @param userModel (UserModel) User Model used to interact with user states
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: UserModel) {
-
     val eventState = eventModel.eventState.collectAsState()
     val userState = userModel.userState.collectAsState()
 
+    // Default remember variables for text fields
     var title by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(eventState.value.addEvent.title ?: "")) }
     var description by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.description ?: "")) }
     var cost by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.cost.toString() ?: "")) }
     var maxAttendees by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.maxAttendees.toString() ?: "")) }
     var tags by remember { mutableStateOf(TextFieldValue(eventState.value.addEvent.tags!!.joinToString(", ") ?: "")) }
 
+    // Reset the add event variable when the flag is set
     if(eventState.value.deleteAddEventFlag) {
         title = TextFieldValue("")
         description = TextFieldValue("")
@@ -81,6 +74,7 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: 
         eventModel.setDeleteAddEventFlag(false)
     }
 
+    // Update the addEvent whenever a value changes
     eventModel.updateAddEvent(
         Event(
             title = title.text,
@@ -91,7 +85,6 @@ fun Create(navigationModel: NavigationModel, eventModel: EventModel, userModel: 
             hostedBy = userState.value.localUser?.uid.toString()
         )
     )
-
 
     Column (
         verticalArrangement = Arrangement.Top,

@@ -11,7 +11,25 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-fun getTrailingButtonFunction(navController: NavController, currentScreen: Screen, userModel: UserModel, auth: FirebaseAuth, context: Context, db: FirebaseFirestore): () -> Unit {
+/**
+ * # Get Trailing Button
+ * The getTrailingButtonFunction Function is used to get the trailing button for the onboarding flow screens.
+ *
+ * @param navController (NavController) Navigation Controller to navigate to other screens
+ * @param currentScreen (Screen) Current Screen
+ * @param userModel (UserModel) User Model to interact with user states
+ * @param auth (FirebaseAuth) Firebase authentication
+ * @param context (Context)
+ * @param db (FirebaseFirestore) Firebase Firestore database to interact with datebase
+ */
+fun getTrailingButtonFunction(
+    navController: NavController,
+    currentScreen: Screen,
+    userModel: UserModel,
+    auth: FirebaseAuth,
+    context: Context,
+    db: FirebaseFirestore
+): () -> Unit {
     when(currentScreen) {
         Screen.OnboardingFlow1 -> return {
             navController.navigate(Screen.OnboardingFlow2.route)
