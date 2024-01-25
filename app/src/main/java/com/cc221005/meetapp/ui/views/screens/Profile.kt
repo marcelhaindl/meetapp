@@ -61,8 +61,8 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
     var tabIndex by remember { mutableStateOf(0) }
 
     // Create the tab strings
-    val tabs = listOf(stringResource(R.string.hosted),
-        stringResource(R.string.upcoming), stringResource(R.string.visited))
+    val tabs = listOf(stringResource(R.string.my_events),
+            stringResource(R.string.upcoming), stringResource(R.string.visited))
 
     // Load hosted, upcoming and visited events into User Model
     userModel.getEventsFromUserId(localUser?.uid.toString())
@@ -104,7 +104,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Row {
+                /*Row {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.clickable {  }
@@ -137,7 +137,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))*/
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = if (localUser?.biography.isNullOrEmpty()) "Hi, I am ${localUser?.name} and this is my MeetApp Account. Let's discover new events together."
@@ -155,7 +155,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+                /*Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -163,7 +163,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     onClick = {  }
                 ) {
                     Text(text = stringResource(R.string.edit_profile))
-                }
+                }*/
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -176,7 +176,10 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                     tabs.forEachIndexed { index, title ->
                         Tab(text = { Text(title) },
                             selected = tabIndex == index,
+                            enabled = index == 0,
                             onClick = { tabIndex = index },
+                            selectedContentColor = if(index != 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else MaterialTheme.colorScheme.primary,
+                            unselectedContentColor = if(index != 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else MaterialTheme.colorScheme.primary,
                             icon = {
                                 when (index) {
                                     0 -> Text(
@@ -202,7 +205,7 @@ fun Profile(userModel: UserModel, navController: NavController, eventModel: Even
                 when (tabIndex) {
                     0 -> items (1) {
                         Text(
-                            text = stringResource(R.string.no_hosted_events),
+                            text = stringResource(R.string.no_events_created),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

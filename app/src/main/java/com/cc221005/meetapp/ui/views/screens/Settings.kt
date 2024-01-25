@@ -44,7 +44,7 @@ fun Settings(auth: FirebaseAuth, userModel: UserModel, navController: NavControl
             .padding(vertical = 16.dp)
     ) {
         Column {
-            SettingsItem (
+            /*SettingsItem (
                 icon = R.drawable.person,
                 title = stringResource(R.string.account_settings),
                 onClick = { }
@@ -68,14 +68,14 @@ fun Settings(auth: FirebaseAuth, userModel: UserModel, navController: NavControl
                 icon = R.drawable.language,
                 title = stringResource(R.string.language),
                 onClick = { }
-            )
+            )*/
             SettingsItem (
                 icon = R.drawable.theme,
                 title = stringResource(R.string.theme),
                 onClick = {
                     navController.navigate(Screen.Theme.route)
                 }
-            )
+            )/*
             SettingsItem (
                 icon = R.drawable.legal,
                 title = stringResource(R.string.legal_and_compliance),
@@ -90,7 +90,7 @@ fun Settings(auth: FirebaseAuth, userModel: UserModel, navController: NavControl
                 icon = R.drawable.help,
                 title = stringResource(R.string.feedback_and_support),
                 onClick = { }
-            )
+            )*/
         }
         TextButton(
             onClick = {

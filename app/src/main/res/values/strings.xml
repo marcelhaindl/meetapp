@@ -86,4 +86,6 @@
     <string name="hosted_events_not_available">Hosted events not available</string>
     <string name="upcoming_events_not_available">Upcoming events not available</string>
     <string name="visited_events_not_available">Visited events not available</string>
+    <string name="my_events">My Events</string>
+    <string name="no_events_created">No events created!</string>
 </resources>

@@ -99,7 +99,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel) {
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Row {
+                /*Row {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.clickable {  }
@@ -132,7 +132,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))*/
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = if (userState.value.specificUser.biography.isNullOrEmpty()) "Hi, I am ${userState.value.specificUser.name} and this is my MeetApp Account. Let's discover new events together."
@@ -150,7 +150,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+                /*Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     modifier = Modifier
@@ -159,7 +159,7 @@ fun SpecificUser(navController: NavController, userModel: UserModel) {
                     onClick = {  }
                 ) {
                     Text(text = stringResource(R.string.follow))
-                }
+                }*/
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -173,7 +173,10 @@ fun SpecificUser(navController: NavController, userModel: UserModel) {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(title) },
                         selected = tabIndex == index,
+                        enabled = index == 0,
                         onClick = { tabIndex = index },
+                        selectedContentColor = if(index != 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else MaterialTheme.colorScheme.primary,
+                        unselectedContentColor = if(index != 0) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else MaterialTheme.colorScheme.primary,
                         icon = {
                             when (index) {
                                 0 -> Text(

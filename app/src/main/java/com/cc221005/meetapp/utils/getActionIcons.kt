@@ -126,13 +126,13 @@ fun getActionIcons(
                 }
             }
             Screen.Profile -> {
-                IconButton(onClick = {  }) {
+                /*IconButton(onClick = {  }) {
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
                         contentDescription = stringResource(R.string.wishlist),
                         tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                }
+                }*/
                 IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),

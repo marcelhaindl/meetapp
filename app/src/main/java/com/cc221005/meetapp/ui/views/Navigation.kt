@@ -326,13 +326,13 @@ fun BottomNavigationBar(navController: NavController, selectedScreen: Screen) {
             label = { Text(text = "Create") },
             colors = navigationBarItemColors
         )
-        NavigationBarItem(
+        /*NavigationBarItem(
             selected = (selectedScreen == Screen.Chat),
             onClick = { navController.navigate(Screen.Chat.route) },
             icon = { Icon(painter = painterResource(id = R.drawable.chat), contentDescription = null) },
             label = { Text(text = "Chat") },
             colors = navigationBarItemColors
-        )
+        )*/
         NavigationBarItem(
             selected = (selectedScreen == Screen.Profile),
             onClick = { navController.navigate(Screen.Profile.route) },
